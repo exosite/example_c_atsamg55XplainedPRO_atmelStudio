@@ -1,0 +1,36 @@
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+*.sw[a-z]
+tags
+.env
+.jiramulerc
+
+vs2012/Debug
+vs2012/exosite_c_libraries/Debug/
+docs/html/
+*.sdf
+vs/
+
+# Thumbnails
+._*
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+testrunner/
+
+*.uncrustify
+
+*.suo
+*.opensdf
+*.filters
+*.exe
+
+lib*.a
+
