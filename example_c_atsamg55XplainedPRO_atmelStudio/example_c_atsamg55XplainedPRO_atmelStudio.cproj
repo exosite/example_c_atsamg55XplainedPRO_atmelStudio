@@ -662,6 +662,7 @@
     <Folder Include="src\libexosite_c_http-device\exosite-lib\" />
     <Folder Include="src\libexosite_c_http-device\exosite-lib\include\" />
     <Folder Include="src\libexosite_c_http-device\exosite-lib\src\" />
+    <Folder Include="src\exosite-pal" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\ASF\common\services\serial\sam_uart\uart_serial.h">
@@ -1327,6 +1328,12 @@
     <None Include="src\libexosite_c_http-device\exosite-lib\include\exosite_async.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\exosite-pal\exosite_pal_async.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\exosite-pal\exosite_pal_async.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\libexosite_c_http-device\exosite-lib\src\exosite_async.c">
       <SubType>compile</SubType>
     </Compile>
