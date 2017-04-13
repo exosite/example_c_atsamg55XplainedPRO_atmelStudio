@@ -30,8 +30,10 @@
       <framework-data>
         <options>
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.components.wifi.winc1500" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.applications.user_application.xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.utils.cmsis.samg55.source.template" value="Add" config="" content-id="Atmel.ASF" />
         </options>
@@ -261,6 +263,15 @@
           <file path="src/ASF/sam/drivers/pio/pio_handler.h" framework="" version="3.34.1" source="sam\drivers\pio\pio_handler.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/drivers/spi/spi.c" framework="" version="3.34.1" source="sam\drivers\spi\spi.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/drivers/spi/spi.h" framework="" version="3.34.1" source="sam\drivers\spi\spi.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/serial/usart_serial.c" framework="" version="3.34.1" source="common\services\serial\usart_serial.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/serial/sam_uart/uart_serial.h" framework="" version="3.34.1" source="common\services\serial\sam_uart\uart_serial.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/serial/serial.h" framework="" version="3.34.1" source="common\services\serial\serial.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/Config/conf_uart_serial.h" framework="" version="3.34.1" source="common\services\serial\sam_uart\module_config\conf_uart_serial.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/stdio/read.c" framework="" version="3.34.1" source="common\utils\stdio\read.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/stdio/write.c" framework="" version="3.34.1" source="common\utils\stdio\write.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/stdio/stdio_serial/stdio_serial.h" framework="" version="3.34.1" source="common\utils\stdio\stdio_serial\stdio_serial.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/usart/usart.c" framework="" version="3.34.1" source="sam\drivers\usart\usart.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/usart/usart.h" framework="" version="3.34.1" source="sam\drivers\usart\usart.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.34.1/common.applications.user_application.xplained_pro.samg55_xplained_pro/html/index.html" />
         <offline-documentation help="" />
@@ -318,6 +329,11 @@
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/common/services/serial/sam_uart</Value>
+      <Value>../src/ASF/common/services/serial</Value>
+      <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
+      <Value>../src/ASF/sam/drivers/usart</Value>
+      <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
@@ -366,6 +382,11 @@
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/common/services/serial/sam_uart</Value>
+      <Value>../src/ASF/common/services/serial</Value>
+      <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
+      <Value>../src/ASF/sam/drivers/usart</Value>
+      <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAMG55_XPLAINED_PRO -D__SAMG55J19__ -Dprintf=iprintf -Dscanf=iscanf</armgcc.preprocessingassembler.general.AssemblerFlags>
@@ -397,6 +418,11 @@
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/common/services/serial/sam_uart</Value>
+      <Value>../src/ASF/common/services/serial</Value>
+      <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
+      <Value>../src/ASF/sam/drivers/usart</Value>
+      <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
 </ArmGcc>
@@ -448,6 +474,11 @@
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/common/services/serial/sam_uart</Value>
+      <Value>../src/ASF/common/services/serial</Value>
+      <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
+      <Value>../src/ASF/sam/drivers/usart</Value>
+      <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
@@ -497,6 +528,11 @@
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/common/services/serial/sam_uart</Value>
+      <Value>../src/ASF/common/services/serial</Value>
+      <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
+      <Value>../src/ASF/sam/drivers/usart</Value>
+      <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
@@ -529,6 +565,11 @@
       <Value>../src/ASF/common/services/delay</Value>
       <Value>../src/ASF/common/services/sleepmgr</Value>
       <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/common/services/serial/sam_uart</Value>
+      <Value>../src/ASF/common/services/serial</Value>
+      <Value>../src/ASF/common/utils/stdio/stdio_serial</Value>
+      <Value>../src/ASF/sam/drivers/usart</Value>
+      <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
   <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
@@ -569,10 +610,14 @@
     <Folder Include="src\ASF\common\services\delay\sam\" />
     <Folder Include="src\ASF\common\services\ioport\" />
     <Folder Include="src\ASF\common\services\ioport\sam\" />
+    <Folder Include="src\ASF\common\services\serial\" />
+    <Folder Include="src\ASF\common\services\serial\sam_uart\" />
     <Folder Include="src\ASF\common\services\sleepmgr\" />
     <Folder Include="src\ASF\common\services\sleepmgr\sam\" />
     <Folder Include="src\ASF\common\utils\" />
     <Folder Include="src\ASF\common\utils\interrupt\" />
+    <Folder Include="src\ASF\common\utils\stdio\" />
+    <Folder Include="src\ASF\common\utils\stdio\stdio_serial\" />
     <Folder Include="src\ASF\sam\" />
     <Folder Include="src\ASF\sam\boards\" />
     <Folder Include="src\ASF\sam\boards\samg55_xplained_pro\" />
@@ -585,6 +630,7 @@
     <Folder Include="src\ASF\sam\drivers\pmc\" />
     <Folder Include="src\ASF\sam\drivers\spi\" />
     <Folder Include="src\ASF\sam\drivers\supc\" />
+    <Folder Include="src\ASF\sam\drivers\usart\" />
     <Folder Include="src\ASF\sam\utils\" />
     <Folder Include="src\ASF\sam\utils\cmsis\" />
     <Folder Include="src\ASF\sam\utils\cmsis\samg\" />
@@ -612,9 +658,31 @@
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\" />
     <Folder Include="src\ASF\thirdparty\CMSIS\Lib\GCC\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\libexosite_c_http-device\" />
+    <Folder Include="src\libexosite_c_http-device\exosite-lib\" />
+    <Folder Include="src\libexosite_c_http-device\exosite-lib\include\" />
+    <Folder Include="src\libexosite_c_http-device\exosite-lib\src\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\ASF\common\services\serial\sam_uart\uart_serial.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\serial\serial.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\serial\usart_serial.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\ASF\common\services\sleepmgr\sam\sleepmgr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\utils\stdio\read.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\utils\stdio\stdio_serial\stdio_serial.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\utils\stdio\write.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ASF\sam\drivers\pio\pio_handler.c">
@@ -1238,6 +1306,12 @@
     <Compile Include="src\ASF\sam\drivers\supc\supc.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ASF\sam\drivers\usart\usart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\drivers\usart\usart.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\sam\utils\cmsis\samg\samg55\source\templates\gcc\startup_samg55.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1245,6 +1319,15 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ASF\sam\utils\syscalls\gcc\syscalls.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\config\conf_uart_serial.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\libexosite_c_http-device\exosite-lib\include\exosite_async.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\libexosite_c_http-device\exosite-lib\src\exosite_async.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.c">
