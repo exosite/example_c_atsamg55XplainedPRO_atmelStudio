@@ -1,0 +1,4 @@
+[submodule "libexosite_c_http-device"]
+	path = example_c_atsamg55XplainedPRO_atmelStudio/src/libexosite_c_http-device
+	url = https://github.com/exosite/libexosite_c_http-device.git
+	branch = develop
