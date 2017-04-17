@@ -50,12 +50,21 @@
 #endif
 
 
+/** Exosite Library state. */
 Exosite_state_t exoLib;
+/** Plaform specific state for Exosite library. */
 exoPal_state_t exoPal;
 
 /** Wi-Fi status variable. */
 static bool gbConnectedWifi = false;
 
+/* Local prototypes */
+int exolib_start_complete(Exosite_state_t *exo, int status);
+int exolib_write_complete(Exosite_state_t *exo, int status);
+int exolib_read_begin(Exosite_state_t *exo, int status);
+int exolib_read_raw(Exosite_state_t *exo, const char *data, size_t len);
+int exolib_read_complete(Exosite_state_t *exo, int status);
+int exolib_timestamp_complete(Exosite_state_t *exo, uint32_t timestamp);
 
 /**
  * \brief Configure UART console.
@@ -272,9 +281,10 @@ int main(void)
 {
     tstrWifiInitParam param;
     int8_t ret;
+#if 0
     uint8_t mac_addr[6];
     uint8_t u8IsMacAddrValid;
-    struct sockaddr_in addr_in;
+#endif
 
     /* Initialize the board. */
     sysclk_init();
@@ -345,9 +355,6 @@ int main(void)
 
     while (1) {
         m2m_wifi_handle_events(NULL);
-
-        if (gbConnectedWifi ) {
-        }
     }
 
     return 0;
