@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Empty user application template
+ * \brief
  *
  */
 
@@ -10,17 +10,11 @@
  *
  * \par Empty user application template
  *
- * This is a bare minimum user application template.
  *
  * For documentation of the board, go \ref group_common_boards "here" for a link
  * to the board-specific documentation.
  *
  * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# Minimal main function that starts with a call to board_init()
- * -# Basic usage of on-board LED and button
- * -# "Insert application code here" comment
  *
  */
 
@@ -325,6 +319,13 @@ int main(void)
     exoLib.ops.on_read_complete = exolib_read_complete;
     exoLib.ops.on_timestamp_complete = exolib_timestamp_complete;
 
+    {
+        uint8_t mac_addr[6];
+        m2m_wifi_get_mac_address(mac_addr);
+        printf("Device MAC: %02x:%02x:%02x:%02x:%02x:%02x\r\n",
+                mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3],
+                mac_addr[4], mac_addr[5]);
+    }
 
 #if 0
     // Toss up an AP and let user config SSID&pass.
