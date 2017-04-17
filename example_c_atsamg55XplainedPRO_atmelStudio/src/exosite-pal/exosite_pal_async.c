@@ -229,6 +229,8 @@ uint8_t exoPal_getUuid(char * read_buffer, uint8_t maxlen)
 void exoPal_init(exoPal_state_t *state)
 {
     exoPal_memset(state, 0, sizeof(exoPal_state_t));
+    state->tcp_socket = -1;
+    state->state = exoPal_state_initalized;
 }
 
 /** \brief Setup PAL for IO
@@ -248,7 +250,9 @@ void exoPal_init(exoPal_state_t *state)
  */
 int exoPal_start(exoPal_state_t *state, const char *host)
 {
-
+    if(state->state != exoPal_state_initalized) {
+        return -1;
+    }
     gethostbyname((uint8_t *)host);
     // Now wait for the resolve_cb
     return 0;
