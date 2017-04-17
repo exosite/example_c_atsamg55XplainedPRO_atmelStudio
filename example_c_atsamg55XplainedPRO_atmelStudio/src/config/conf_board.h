@@ -47,14 +47,16 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+#define CONF_BOARD_UART_CONSOLE
+
+#define CONF_BOARD_SPI
+#define CONF_BOARD_SPI_NPCS0
+#define BOARD_FLEXCOM_SPI    FLEXCOM5
+
+
 #ifndef BOARD_FLEXCOM_TWI
 /** FLEXCOM base address for TWI mode*/
 #define BOARD_FLEXCOM_TWI    FLEXCOM4
-#endif
-
-#ifndef BOARD_FLEXCOM_SPI
-/** FLEXCOM base address for SPI mode*/
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
 #endif
 
 #ifndef BOARD_FLEXCOM_USART
