@@ -33,6 +33,7 @@
 *
 *****************************************************************************/
 #include "exosite_pal_async.h"
+#include "conf_exosite.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -177,8 +178,7 @@ uint8_t exoPal_getCik(char * read_buffer, uint8_t maxlen)
  */
 uint8_t exoPal_getModel(char * read_buffer, uint8_t maxlen)
 {
-    // FIXME: Need a Model
-    return strlcpy(read_buffer, "", maxlen);
+    return strlcpy(read_buffer, EXOPAL_MODEL_TOKEN, maxlen);
 }
 
 /*!
@@ -189,8 +189,7 @@ uint8_t exoPal_getModel(char * read_buffer, uint8_t maxlen)
  */
 uint8_t exoPal_getVendor(char * read_buffer, uint8_t maxlen)
 {
-    // FIXME: Need a Vendor
-    return strlcpy(read_buffer, "", maxlen);
+    return strlcpy(read_buffer, EXOPAL_VENDOR_TOKEN, maxlen);
 }
 
 /*!

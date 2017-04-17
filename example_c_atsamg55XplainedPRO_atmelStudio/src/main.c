@@ -31,18 +31,8 @@
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
 #include "conf_uart_serial.h"
+#include "conf_exosite.h"
 #include "exosite_async.h"
-
-#ifndef MAIN_WLAN_SSID
-#define MAIN_WLAN_SSID "theCloud"
-#endif
-#ifndef MAIN_WLAN_AUTH
-#define MAIN_WLAN_AUTH M2M_WIFI_SEC_WPA_PSK
-#endif
-#ifndef MAIN_WLAN_PSK
-#define MAIN_WLAN_PSK "xxxxx"
-#endif
-
 
 /** Exosite Library state. */
 Exosite_state_t exoLib;
