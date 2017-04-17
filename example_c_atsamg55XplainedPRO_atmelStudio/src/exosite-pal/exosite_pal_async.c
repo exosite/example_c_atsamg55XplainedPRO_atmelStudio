@@ -274,6 +274,7 @@ int exoPal_stop(exoPal_state_t *state)
 int exoPal_tcpSocketOpen(exoPal_state_t *state)
 {
     struct sockaddr_in addr_in;
+    int ret;
 
     addr_in.sin_family = AF_INET;
     addr_in.sin_port = _htons(443);
@@ -285,15 +286,16 @@ int exoPal_tcpSocketOpen(exoPal_state_t *state)
     }
 
     /* Check if socket was created successfully */
-    if (state->tcp_socket == -1) {
-        printf("socket error.\r\n");
+    if (state->tcp_socket < 0) {
+        printf("socket error. (%d)\r\n", state->tcp_socket);
         close(state->tcp_socket);
         return -1;
     }
 
     /* If success, connect to socket */
-    if (connect(state->tcp_socket, (struct sockaddr *)&addr_in, sizeof(struct sockaddr_in)) != SOCK_ERR_NO_ERROR) {
-        printf("connect error.\r\n");
+    ret = connect(state->tcp_socket, (struct sockaddr *)&addr_in, sizeof(struct sockaddr_in));
+    if (ret != SOCK_ERR_NO_ERROR) {
+        printf("connect error. (%d)\r\n", ret);
         return SOCK_ERR_INVALID;
     }
 

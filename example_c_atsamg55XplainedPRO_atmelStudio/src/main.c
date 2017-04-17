@@ -153,7 +153,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
                         }
 
                     } else {
-                        printf("socket_cb: connect error!\r\n");
+                        printf("socket_cb: connect error! (%d)\r\n", pstrConnect->s8Error);
                         close(exoPal.tcp_socket);
                         exoPal.tcp_socket = -1;
                         if(exoPal.ops.on_connected) {
