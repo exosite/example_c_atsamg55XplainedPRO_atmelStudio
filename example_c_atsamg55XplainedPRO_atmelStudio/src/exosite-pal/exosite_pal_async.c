@@ -150,9 +150,10 @@ size_t exoPal_strlcat(char* dst, const char* src, size_t len)
  * Writes the 40 chars starting at cik* to nvm.
  *
  * \param[in] cik cik to write to nvm
+ * \param[in] len Size of the cik (should be 40)
  * \return errorcode if successful else 0
  */
-uint8_t exoPal_setCik(const char * cik)
+uint8_t exoPal_setCik(const char * cik, uint8_t len)
 {
     return 0;
 }
@@ -160,9 +161,10 @@ uint8_t exoPal_setCik(const char * cik)
 /*!
  * \brief Retrieves the stored CIK
  * \param[out] read_buffer pointer of buffer to place results in
+ * \param[in] maxlen Size of the read_buffer
  * \return 0 if successful, else errorCode
  */
-uint8_t exoPal_getCik(char * read_buffer)
+uint8_t exoPal_getCik(char * read_buffer, uint8_t maxlen)
 {
     return 0;
 }
@@ -170,36 +172,46 @@ uint8_t exoPal_getCik(char * read_buffer)
 /*!
  * \brief Retrieves the stored Model string
  * \param[in] read_buffer pointer of buffer to place results in
+ * \param[in] maxlen Size of the read_buffer
  * \return 0 if successful, else returns error code
  */
-uint8_t exoPal_getModel(char * read_buffer)
+uint8_t exoPal_getModel(char * read_buffer, uint8_t maxlen)
 {
-    return 0;
+    // FIXME: Need a Model
+    return strlcpy(read_buffer, "", maxlen);
 }
 
 /*!
  * \brief Retrieves the vendor string
  * \param[in] read_buffer pointer of buffer to place results in
+ * \param[in] maxlen Size of the read_buffer
  * \return returns 0 if successful, else returns error code.
  */
-uint8_t exoPal_getVendor(char * read_buffer)
+uint8_t exoPal_getVendor(char * read_buffer, uint8_t maxlen)
 {
-    return 0;
+    // FIXME: Need a Vendor
+    return strlcpy(read_buffer, "", maxlen);
 }
 
 /*!
  * \brief Retrieves UUID from device
  *
- *	This function retrieves a unique ID from your device.  This is typically
- *	the MEID of a cell modem, MAC address of a network card, or serial number
- *	of the device.
+ *  This function retrieves a unique ID from your device.  This is typically
+ *  the MEID of a cell modem, MAC address of a network card, or serial number
+ *  of the device.
  *
  * \param[in] UUID_buf Buffer to put the devices UUID into.
  * \param[out]
+ * \param[in] maxlen Size of the read_buffer
  * \return 1 if failed to retrieve UUID, else 0
  */
-uint8_t exoPal_getUuid(char * read_buffer)
+uint8_t exoPal_getUuid(char * read_buffer, uint8_t maxlen)
 {
+    uint8_t mac_addr[6];
+    m2m_wifi_get_mac_address(mac_addr);
+    snprintf(read_buffer, maxlen, "%02x:%02x:%02x:%02x:%02x:%02x",
+            mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3],
+            mac_addr[4], mac_addr[5]);
     return 0;
 }
 
@@ -236,6 +248,9 @@ void exoPal_init(exoPal_state_t *state)
  */
 int exoPal_start(exoPal_state_t *state, const char *host)
 {
+
+    gethostbyname((uint8_t *)host);
+    // Now wait for the resolve_cb
     return 0;
 }
 
@@ -258,6 +273,31 @@ int exoPal_stop(exoPal_state_t *state)
  */
 int exoPal_tcpSocketOpen(exoPal_state_t *state)
 {
+    struct sockaddr_in addr_in;
+
+    addr_in.sin_family = AF_INET;
+    addr_in.sin_port = _htons(443);
+    addr_in.sin_addr.s_addr = state->hostIP;
+
+    /* Create secure socket */
+    if (state->tcp_socket < 0) {
+        state->tcp_socket = socket(AF_INET, SOCK_STREAM, SOCKET_FLAGS_SSL);
+    }
+
+    /* Check if socket was created successfully */
+    if (state->tcp_socket == -1) {
+        printf("socket error.\r\n");
+        close(state->tcp_socket);
+        return -1;
+    }
+
+    /* If success, connect to socket */
+    if (connect(state->tcp_socket, (struct sockaddr *)&addr_in, sizeof(struct sockaddr_in)) != SOCK_ERR_NO_ERROR) {
+        printf("connect error.\r\n");
+        return SOCK_ERR_INVALID;
+    }
+
+    /* Success */
     return 0;
 }
 
@@ -271,6 +311,11 @@ int exoPal_tcpSocketOpen(exoPal_state_t *state)
  */
 int exoPal_tcpSocketClose(exoPal_state_t *state)
 {
+    close(state->tcp_socket);
+    state->tcp_socket = -1;
+    if(state->ops.on_socket_closed) {
+        state->ops.on_socket_closed(state, 0);
+    }
     return 0;
 }
 
@@ -286,7 +331,7 @@ int exoPal_tcpSocketClose(exoPal_state_t *state)
  */
 int exoPal_socketWrite(exoPal_state_t *state, const char * buffer, uint16_t len)
 {
-    return 0;
+    return send(state->tcp_socket, (char*)buffer, len, 0);
 }
 
 
@@ -305,7 +350,7 @@ int exoPal_socketWrite(exoPal_state_t *state, const char * buffer, uint16_t len)
  */
 int exoPal_socketRead(exoPal_state_t *state, char * buffer, uint16_t bufSize)
 {
-    return 0;
+    return recv(state->tcp_socket, buffer, bufSize, 0);
 }
 
 /** \brief  Used to do any operations before
@@ -315,6 +360,7 @@ int exoPal_socketRead(exoPal_state_t *state, char * buffer, uint16_t bufSize)
  */
 int exoPal_sendingComplete(exoPal_state_t *state)
 {
+    // ??? flush send?
     return 0;
 }
 

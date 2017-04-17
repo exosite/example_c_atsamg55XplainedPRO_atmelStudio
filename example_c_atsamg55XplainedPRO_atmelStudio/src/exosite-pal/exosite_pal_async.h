@@ -36,6 +36,8 @@
 #define __EXOSITE_PAL_ASYNC__
 #include <sys/types.h>
 #include <stdint.h>
+#include "driver/include/m2m_wifi.h"
+#include "socket/include/socket.h"
 
 // Utility PAL
 uint8_t exoPal_itoa(int value, char* buf, uint8_t bufSize);
@@ -53,11 +55,11 @@ size_t exoPal_strlcat(char* dst, const char* src, size_t len);
 #endif /*MIN*/
 
 // Memory/NVRAM/Flash PAL
-uint8_t exoPal_setCik(const char * read_buffer);
-uint8_t exoPal_getCik(char * read_buffer);
-uint8_t exoPal_getVendor(char * read_buffer);
-uint8_t exoPal_getModel(char * read_buffer);
-uint8_t exoPal_getUuid(char * read_buffer);
+uint8_t exoPal_setCik(const char * read_buffer, uint8_t len);
+uint8_t exoPal_getCik(char * read_buffer, uint8_t maxlen);
+uint8_t exoPal_getVendor(char * read_buffer, uint8_t maxlen);
+uint8_t exoPal_getModel(char * read_buffer, uint8_t maxlen);
+uint8_t exoPal_getUuid(char * read_buffer, uint8_t maxlen);
 
 
 // Async Sockets PAL.
@@ -95,6 +97,10 @@ struct exoPal_state_s {
     void *context; //!< This is used to store Exosite_state_t
 
     // Contents here are specific to each PAL.
+
+    uint32_t hostIP;
+    SOCKET tcp_socket;
+
 };
 
 

@@ -31,23 +31,326 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
+#include <string.h>
+#include "asf.h"
+#include "bsp/include/nm_bsp.h"
+#include "driver/include/m2m_wifi.h"
+#include "socket/include/socket.h"
+#include "conf_uart_serial.h"
+#include "exosite_async.h"
 
-int main (void)
+#ifndef MAIN_WLAN_SSID
+#define MAIN_WLAN_SSID "theCloud"
+#endif
+#ifndef MAIN_WLAN_AUTH
+#define MAIN_WLAN_AUTH M2M_WIFI_SEC_WPA_PSK
+#endif
+#ifndef MAIN_WLAN_PSK
+#define MAIN_WLAN_PSK "xxxxx"
+#endif
+
+
+Exosite_state_t exoLib;
+exoPal_state_t exoPal;
+
+/** Wi-Fi status variable. */
+static bool gbConnectedWifi = false;
+
+
+/**
+ * \brief Configure UART console.
+ */
+static void configure_console(void)
 {
-	board_init();
+    const usart_serial_options_t uart_serial_options = {
+        .baudrate =     CONF_UART_BAUDRATE,
+        .charlength =   CONF_UART_CHAR_LENGTH,
+        .paritytype =   CONF_UART_PARITY,
+        .stopbits =     CONF_UART_STOP_BITS,
+    };
 
-	/* Insert application code here, after the board has been initialized. */
-
-	/* This skeleton code simply sets the LED to the state of the button. */
-	while (1) {
-		/* Is button pressed? */
-		if (ioport_get_pin_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE) {
-			/* Yes, so turn LED on. */
-			ioport_set_pin_level(LED_0_PIN, LED_0_ACTIVE);
-		} else {
-			/* No, so turn LED off. */
-			ioport_set_pin_level(LED_0_PIN, !LED_0_ACTIVE);
-		}
-	}
+    /* Configure UART console. */
+    sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+    stdio_serial_init(CONF_UART, &uart_serial_options);
 }
+
+int exolib_start_complete(Exosite_state_t *exo, int status)
+{
+    printf(":: Exolib ready. \r\n");
+
+    // FIXME: Now what? write something, read something else?
+    return 0;
+}
+
+int exolib_write_complete(Exosite_state_t *exo, int status)
+{
+    return 0;
+}
+
+int exolib_read_begin(Exosite_state_t *exo, int status)
+{
+    return 0;
+}
+
+int exolib_read_raw(Exosite_state_t *exo, const char *data, size_t len)
+{
+    return 0;
+}
+
+int exolib_read_complete(Exosite_state_t *exo, int status)
+{
+    return 0;
+}
+
+int exolib_timestamp_complete(Exosite_state_t *exo, uint32_t timestamp)
+{
+    return 0;
+}
+
+/**
+ * \brief Callback function of IP address.
+ *
+ * \param[in] hostName Domain name.
+ * \param[in] hostIp Server IP.
+ *
+ * \return None.
+ */
+static void resolve_cb(uint8_t *hostName, unsigned long hostIp)
+{
+    exoPal.hostIP = hostIp;
+    printf("resolve_cb: %s IP address is %d.%d.%d.%d\r\n\r\n", hostName,
+            (int)((hostIp >> 0) & 0xff), (int)((hostIp >> 8) & 0xff),
+            (int)((hostIp >> 16) & 0xff), (int)((hostIp >> 24) & 0xff));
+
+    if(exoPal.ops.on_start_complete) {
+        exoPal.ops.on_start_complete(&exoPal, 0);
+    }
+}
+
+/**
+ * \brief Callback function of TCP client socket.
+ *
+ * \param[in] sock socket handler.
+ * \param[in] u8Msg Type of Socket notification
+ * \param[in] pvMsg A structure contains notification informations.
+ *
+ * \return None.
+ */
+static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
+{
+    /* Check for socket event on TCP socket. */
+    if (sock == exoPal.tcp_socket) {
+        switch (u8Msg) {
+            case SOCKET_MSG_CONNECT:
+                {
+                    tstrSocketConnectMsg *pstrConnect = (tstrSocketConnectMsg *)pvMsg;
+                    if (pstrConnect && pstrConnect->s8Error >= SOCK_ERR_NO_ERROR) {
+                        if(exoPal.ops.on_connected) {
+                            exoPal.ops.on_connected(&exoPal, 0);
+                        }
+
+                    } else {
+                        printf("socket_cb: connect error!\r\n");
+                        close(exoPal.tcp_socket);
+                        exoPal.tcp_socket = -1;
+                        if(exoPal.ops.on_connected) {
+                            exoPal.ops.on_connected(&exoPal, pstrConnect->s8Error);
+                        }
+                    }
+                }
+                break;
+
+            case SOCKET_MSG_SEND:
+                //tstrSocketSendMsg *snd = (tstrSocketSendMsg *)pvMsg;
+                if(exoPal.ops.on_send_complete) {
+                    // FIXME: where is the result code hiding?
+                    exoPal.ops.on_send_complete(&exoPal, 0);
+                }
+                break;
+
+            case SOCKET_MSG_RECV:
+                {
+                    tstrSocketRecvMsg *rcv = (tstrSocketRecvMsg *)pvMsg;
+                    if (rcv && rcv->s16BufferSize > 0) {
+                    } else {
+                        printf("socket_cb: recv error!\r\n");
+                        close(exoPal.tcp_socket);
+                        exoPal.tcp_socket = -1;
+                    }
+                    if(exoPal.ops.on_recv) {
+                        exoPal.ops.on_recv(&exoPal, (const char*)rcv->pu8Buffer, rcv->s16BufferSize);
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+static void set_dev_name_to_mac(uint8_t *name, uint8_t *mac_addr)
+{
+    /* Name must be in the format WINC1500_00:00 */
+    uint16 len;
+
+    len = m2m_strlen(name);
+    if (len >= 5) {
+#define MAIN_HEX2ASCII(x)                   (((x) >= 10) ? (((x) - 10) + 'A') : ((x) + '0'))
+        name[len - 1] = MAIN_HEX2ASCII((mac_addr[5] >> 0) & 0x0f);
+        name[len - 2] = MAIN_HEX2ASCII((mac_addr[5] >> 4) & 0x0f);
+        name[len - 4] = MAIN_HEX2ASCII((mac_addr[4] >> 0) & 0x0f);
+        name[len - 5] = MAIN_HEX2ASCII((mac_addr[4] >> 4) & 0x0f);
+#undef MAIN_HEX2ASCII
+    }
+}
+
+/**
+ * \brief Callback to get the Wi-Fi status update.
+ *
+ * \param[in] u8MsgType Type of Wi-Fi notification.
+ * \param[in] pvMsg A pointer to a buffer containing the notification parameters.
+ *
+ * \return None.
+ */
+static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
+{
+    switch (u8MsgType) {
+    case M2M_WIFI_RESP_CON_STATE_CHANGED:
+    {
+        tstrM2mWifiStateChanged *pstrWifiState = (tstrM2mWifiStateChanged *)pvMsg;
+        if (pstrWifiState->u8CurrState == M2M_WIFI_CONNECTED) {
+            printf("wifi_cb: M2M_WIFI_CONNECTED\r\n");
+            m2m_wifi_request_dhcp_client();
+        } else if (pstrWifiState->u8CurrState == M2M_WIFI_DISCONNECTED) {
+            printf("wifi_cb: M2M_WIFI_DISCONNECTED\r\n");
+            gbConnectedWifi = false;
+        }
+
+        break;
+    }
+
+    case M2M_WIFI_REQ_DHCP_CONF:
+    {
+        uint8_t *pu8IPAddress = (uint8_t *)pvMsg;
+        printf("wifi_cb: IP address is %u.%u.%u.%u\r\n",
+                pu8IPAddress[0], pu8IPAddress[1], pu8IPAddress[2], pu8IPAddress[3]);
+        gbConnectedWifi = true;
+
+        /* Start up the exosite library */
+        exosite_start(&exoLib);
+        break;
+    }
+
+    case M2M_WIFI_RESP_PROVISION_INFO:
+    {
+        tstrM2MProvisionInfo *pstrProvInfo = (tstrM2MProvisionInfo *)pvMsg;
+        printf("wifi_cb: M2M_WIFI_RESP_PROVISION_INFO\r\n");
+
+        if (pstrProvInfo->u8Status == M2M_SUCCESS) {
+            m2m_wifi_connect((char *)pstrProvInfo->au8SSID, strlen((char *)pstrProvInfo->au8SSID), pstrProvInfo->u8SecType,
+                    pstrProvInfo->au8Password, M2M_WIFI_CH_ALL);
+        } else {
+            printf("wifi_cb: provision failed!\r\n");
+        }
+    }
+    break;
+
+    default:
+        break;
+    }
+}
+
+/**
+ * \brief Main application function.
+ *
+ * Initialize system, UART console, network then start weather client.
+ *
+ * \return Program return value.
+ */
+int main(void)
+{
+    tstrWifiInitParam param;
+    int8_t ret;
+    uint8_t mac_addr[6];
+    uint8_t u8IsMacAddrValid;
+    struct sockaddr_in addr_in;
+
+    /* Initialize the board. */
+    sysclk_init();
+    board_init();
+
+    /* Initialize the UART console. */
+    configure_console();
+    printf("-- WINC1500 Exosite client example --\r\n"
+        "-- "BOARD_NAME " --\r\n"
+        "-- Compiled: "__DATE__ " "__TIME__ " --\r\n");
+
+    /* Initialize the BSP. */
+    nm_bsp_init();
+
+    /* Initialize Wi-Fi parameters structure. */
+    memset((uint8_t *)&param, 0, sizeof(tstrWifiInitParam));
+
+    /* Initialize Wi-Fi driver with data and status callbacks. */
+    param.pfAppWifiCb = wifi_cb;
+    ret = m2m_wifi_init(&param);
+    if (M2M_SUCCESS != ret) {
+        printf("main: m2m_wifi_init call error!(%d)\r\n", ret);
+        while (1) {
+        }
+    }
+
+    /* Initialize socket API. */
+    socketInit();
+    registerSocketCallback(socket_cb, resolve_cb);
+
+    /* Initialize Exosite library */
+    exosite_init(&exoLib);
+    exoLib.exoPal = &exoPal;
+    exoLib.ops.on_start_complete = exolib_start_complete;
+    exoLib.ops.on_write_complete = exolib_write_complete;
+    exoLib.ops.on_read_begin = exolib_read_begin;
+    exoLib.ops.on_read_raw = exolib_read_raw;
+    exoLib.ops.on_read_complete = exolib_read_complete;
+    exoLib.ops.on_timestamp_complete = exolib_timestamp_complete;
+
+
+#if 0
+    // Toss up an AP and let user config SSID&pass.
+    m2m_wifi_get_otp_mac_address(mac_addr, &u8IsMacAddrValid);
+    if (!u8IsMacAddrValid) {
+        m2m_wifi_set_mac_address(gau8MacAddr);
+    }
+
+    /* Retrieve MAC address of the WINC and use it for AP name. */
+    m2m_wifi_get_mac_address(gau8MacAddr);
+    set_dev_name_to_mac((uint8_t *)gacDeviceName, gau8MacAddr);
+    set_dev_name_to_mac((uint8_t *)gstrM2MAPConfig.au8SSID, gau8MacAddr);
+    m2m_wifi_set_device_name((uint8_t *)gacDeviceName, (uint8_t)m2m_strlen((uint8_t *)gacDeviceName));
+    gstrM2MAPConfig.au8DHCPServerIP[0] = 0xC0; /* 192 */
+    gstrM2MAPConfig.au8DHCPServerIP[1] = 0xA8; /* 168 */
+    gstrM2MAPConfig.au8DHCPServerIP[2] = 0x01; /* 1 */
+    gstrM2MAPConfig.au8DHCPServerIP[3] = 0x01; /* 1 */
+
+    /* Start web provisioning mode. */
+    m2m_wifi_start_provision_mode((tstrM2MAPConfig *)&gstrM2MAPConfig, (char *)gacHttpProvDomainName, 1);
+    printf("\r\nProvision Mode started.\r\nConnect to [%s] via AP[%s] and fill up the page.\r\n\r\n",
+            MAIN_HTTP_PROV_SERVER_DOMAIN_NAME, gstrM2MAPConfig.au8SSID);
+#else
+    // Hardcoded SSID & pass.
+    m2m_wifi_connect((char*)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
+            MAIN_WLAN_AUTH, (char*)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
+#endif
+
+    while (1) {
+        m2m_wifi_handle_events(NULL);
+
+        if (gbConnectedWifi ) {
+        }
+    }
+
+    return 0;
+}
+
+/* vim: set ai cin et sw=4 ts=4 : */
