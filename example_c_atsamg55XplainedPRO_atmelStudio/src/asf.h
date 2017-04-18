@@ -65,6 +65,9 @@
 // From module: FLEXCOM - Flexible Serial Communication Controller
 #include <flexcom.h>
 
+// From module: Flash - SAM Flash Service API
+#include <flash_efc.h>
+
 // From module: Generic board support
 #include <board.h>
 
