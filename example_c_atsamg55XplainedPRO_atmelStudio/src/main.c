@@ -69,6 +69,10 @@ static void configure_console(void)
 
 int exolib_start_complete(Exosite_state_t *exo, int status)
 {
+    if(status != 0) {
+        printf("!! Exolib FAILED!. (%d)\r\n", status);
+        return -1;
+    }
     printf(":: Exolib ready. \r\n");
 
     // FIXME: Now what? write something, read something else?
