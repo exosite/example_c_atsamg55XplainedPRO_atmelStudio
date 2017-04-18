@@ -39,6 +39,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "flash_efc.h"
+
 /*****************************************************************************
  * \defgroup Utility PAL functions
  * @{
@@ -156,6 +158,29 @@ size_t exoPal_strlcat(char* dst, const char* src, size_t len)
  */
 uint8_t exoPal_setCik(const char * cik, uint8_t len)
 {
+    uint32_t sigbuf[10]; // 40 bytes.
+    int ret;
+
+    if(len != 40) {
+        return -1;
+    }
+    ret = flash_init(FLASH_ACCESS_MODE_128, 6);
+    if(ret != FLASH_RC_OK) {
+        return ret;
+    }
+
+    memmove(sigbuf, cik, len);
+
+    ret = flash_erase_user_signature();
+    if(ret != FLASH_RC_OK) {
+        return ret;
+    }
+
+    ret = flash_write_user_signature(cik, sizeof(sigbuf));
+    if(ret != FLASH_RC_OK) {
+        return ret;
+    }
+
     return 0;
 }
 
@@ -167,6 +192,19 @@ uint8_t exoPal_setCik(const char * cik, uint8_t len)
  */
 uint8_t exoPal_getCik(char * read_buffer, uint8_t maxlen)
 {
+    uint32_t sigbuf[10]; // 40 bytes.
+    int ret;
+    ret = flash_init(FLASH_ACCESS_MODE_128, 6);
+    if(ret != FLASH_RC_OK) {
+        return ret;
+    }
+
+    ret = flash_read_user_signature(sigbuf, sizeof(sigbuf));
+    if(ret != FLASH_RC_OK) {
+        return ret;
+    }
+
+    memmove(read_buffer, sigbuf, maxlen);
     return 0;
 }
 
