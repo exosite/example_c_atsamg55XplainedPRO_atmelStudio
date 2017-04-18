@@ -69,7 +69,7 @@ static void configure_console(void)
 
 int exolib_start_complete(Exosite_state_t *exo, int status)
 {
-    if(status != 0) {
+    if(status != 200) {
         printf("!! Exolib FAILED!. (%d)\r\n", status);
         return -1;
     }
@@ -168,7 +168,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
             case SOCKET_MSG_RECV:
                 {
                     tstrSocketRecvMsg *rcv = (tstrSocketRecvMsg *)pvMsg;
-                    size_t len;
+                    size_t len=0;
                     if (rcv && rcv->s16BufferSize > 0) {
                         len = rcv->s16BufferSize;
                     } else if(rcv && rcv->s16BufferSize > SOCK_ERR_CONN_ABORTED) {
