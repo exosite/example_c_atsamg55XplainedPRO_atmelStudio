@@ -199,7 +199,7 @@ uint8_t exoPal_getCik(char * read_buffer, uint8_t maxlen)
         return ret;
     }
 
-    ret = flash_read_user_signature(sigbuf, sizeof(sigbuf));
+    ret = flash_read_user_signature(sigbuf, sizeof(sigbuf)/sizeof(sigbuf[0]));
     if(ret != FLASH_RC_OK) {
         return ret;
     }
