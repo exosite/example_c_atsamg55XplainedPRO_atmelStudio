@@ -41,6 +41,7 @@ exoPal_state_t exoPal;
 
 /** Wi-Fi status variable. */
 static bool gbConnectedWifi = false;
+static char writeReqBuffer[40];
 
 /* Local prototypes */
 int exolib_start_complete(Exosite_state_t *exo, int status);
@@ -75,7 +76,8 @@ int exolib_start_complete(Exosite_state_t *exo, int status)
     }
     printf(":: Exolib ready. \r\n");
 
-    // FIXME: Now what? write something, read something else?
+    // Got get the timestamp from the server.  Then write that to an alias.
+    exosite_timestamp(exo);
     return 0;
 }
 
@@ -101,6 +103,10 @@ int exolib_read_complete(Exosite_state_t *exo, int status)
 
 int exolib_timestamp_complete(Exosite_state_t *exo, uint32_t timestamp)
 {
+    // !!! Remember, the buffer needs to exist until the write callback is called.
+    // So you cannot use memory on the stack.
+    snprintf(writeReqBuffer, sizeof(writeReqBuffer), "change=%d", timestamp);
+    exosite_write(exo, writeReqBuffer);
     return 0;
 }
 
@@ -191,6 +197,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
     }
 }
 
+#if 0
 static void set_dev_name_to_mac(uint8_t *name, uint8_t *mac_addr)
 {
     /* Name must be in the format WINC1500_00:00 */
@@ -206,6 +213,7 @@ static void set_dev_name_to_mac(uint8_t *name, uint8_t *mac_addr)
 #undef MAIN_HEX2ASCII
     }
 }
+#endif
 
 /**
  * \brief Callback to get the Wi-Fi status update.
@@ -319,6 +327,7 @@ int main(void)
     exoLib.ops.on_timestamp_complete = exolib_timestamp_complete;
 
     {
+        // Print out the MAC early.  This makes it easy to get for enabling.
         uint8_t mac_addr[6];
         m2m_wifi_get_mac_address(mac_addr);
         printf("Device MAC: %02x:%02x:%02x:%02x:%02x:%02x\r\n",
