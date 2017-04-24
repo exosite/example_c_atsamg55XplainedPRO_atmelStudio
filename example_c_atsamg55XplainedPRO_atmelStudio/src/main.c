@@ -84,21 +84,27 @@ int exolib_start_complete(Exosite_state_t *exo, int status)
 int exolib_write_complete(Exosite_state_t *exo, int status)
 {
     printf(":: Write returned with %d\r\n", status);
+
+    // Ok, now read
+    exosite_read(exo, "change");
     return 0;
 }
 
 int exolib_read_begin(Exosite_state_t *exo, int status)
 {
+    printf(":: Reading. %d\r\n", status);
     return 0;
 }
 
 int exolib_read_raw(Exosite_state_t *exo, const char *data, size_t len)
 {
+    printf(":: R:> %.*s\r\n", (int)len, data);
     return 0;
 }
 
 int exolib_read_complete(Exosite_state_t *exo, int status)
 {
+    printf(":: Read complete. %d\r\n", status);
     return 0;
 }
 
