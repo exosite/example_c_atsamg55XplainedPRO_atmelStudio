@@ -74,7 +74,7 @@ int exolib_start_complete(Exosite_state_t *exo, int status)
         printf("!! Exolib FAILED!. (%d)\r\n", status);
         return -1;
     }
-    printf(":: Exolib ready. \r\n");
+    printf(":: Exolib ready. Getting timestamp from server.\r\n");
 
     // Got get the timestamp from the server.  Then write that to an alias.
     exosite_timestamp(exo);
@@ -83,6 +83,7 @@ int exolib_start_complete(Exosite_state_t *exo, int status)
 
 int exolib_write_complete(Exosite_state_t *exo, int status)
 {
+    printf(":: Write returned with %d\r\n", status);
     return 0;
 }
 
@@ -103,6 +104,7 @@ int exolib_read_complete(Exosite_state_t *exo, int status)
 
 int exolib_timestamp_complete(Exosite_state_t *exo, uint32_t timestamp)
 {
+    printf(":: Got timestamp %d.\r\n", timestamp);
     // !!! Remember, the buffer needs to exist until the write callback is called.
     // So you cannot use memory on the stack.
     snprintf(writeReqBuffer, sizeof(writeReqBuffer), "change=%d", timestamp);
