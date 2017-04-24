@@ -69,6 +69,10 @@ static void configure_console(void)
 
 int exolib_start_complete(Exosite_state_t *exo, int status)
 {
+    if(status != 200) {
+        printf("!! Exolib FAILED!. (%d)\r\n", status);
+        return -1;
+    }
     printf(":: Exolib ready. \r\n");
 
     // FIXME: Now what? write something, read something else?
@@ -164,14 +168,19 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
             case SOCKET_MSG_RECV:
                 {
                     tstrSocketRecvMsg *rcv = (tstrSocketRecvMsg *)pvMsg;
+                    size_t len=0;
                     if (rcv && rcv->s16BufferSize > 0) {
+                        len = rcv->s16BufferSize;
+                    } else if(rcv && rcv->s16BufferSize > SOCK_ERR_CONN_ABORTED) {
+                        /* Other end closed, exosite lib expects a 0 here */
+                        len = 0;
                     } else {
-                        printf("socket_cb: recv error!\r\n");
+                        printf("socket_cb: recv error! (%d)\r\n", rcv->s16BufferSize);
                         close(exoPal.tcp_socket);
                         exoPal.tcp_socket = -1;
                     }
                     if(exoPal.ops.on_recv) {
-                        exoPal.ops.on_recv(&exoPal, (const char*)rcv->pu8Buffer, rcv->s16BufferSize);
+                        exoPal.ops.on_recv(&exoPal, (const char*)rcv->pu8Buffer, len);
                     }
                 }
                 break;

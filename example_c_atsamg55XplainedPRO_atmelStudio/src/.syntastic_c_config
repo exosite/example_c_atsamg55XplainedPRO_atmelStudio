@@ -56,6 +56,7 @@
 -IASF/sam/drivers/spi
 -IASF/sam/drivers/supc
 -IASF/sam/drivers/usart
+-IASF/sam/services/flash_efc
 -IASF/sam/utils
 -IASF/sam/utils/cmsis
 -IASF/sam/utils/cmsis/samg
