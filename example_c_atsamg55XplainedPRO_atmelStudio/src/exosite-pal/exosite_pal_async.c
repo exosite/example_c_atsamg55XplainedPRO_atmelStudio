@@ -354,8 +354,10 @@ int exoPal_tcpSocketOpen(exoPal_state_t *state)
  */
 int exoPal_tcpSocketClose(exoPal_state_t *state)
 {
-    close(state->tcp_socket);
-    state->tcp_socket = -1;
+    if(state->tcp_socket >= 0) {
+        close(state->tcp_socket);
+        state->tcp_socket = -1;
+    }
     if(state->ops.on_socket_closed) {
         state->ops.on_socket_closed(state, 0);
     }
