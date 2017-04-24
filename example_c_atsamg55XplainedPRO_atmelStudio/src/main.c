@@ -199,24 +199,6 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
     }
 }
 
-#if 0
-static void set_dev_name_to_mac(uint8_t *name, uint8_t *mac_addr)
-{
-    /* Name must be in the format WINC1500_00:00 */
-    uint16 len;
-
-    len = m2m_strlen(name);
-    if (len >= 5) {
-#define MAIN_HEX2ASCII(x)                   (((x) >= 10) ? (((x) - 10) + 'A') : ((x) + '0'))
-        name[len - 1] = MAIN_HEX2ASCII((mac_addr[5] >> 0) & 0x0f);
-        name[len - 2] = MAIN_HEX2ASCII((mac_addr[5] >> 4) & 0x0f);
-        name[len - 4] = MAIN_HEX2ASCII((mac_addr[4] >> 0) & 0x0f);
-        name[len - 5] = MAIN_HEX2ASCII((mac_addr[4] >> 4) & 0x0f);
-#undef MAIN_HEX2ASCII
-    }
-}
-#endif
-
 /**
  * \brief Callback to get the Wi-Fi status update.
  *
@@ -284,10 +266,6 @@ int main(void)
 {
     tstrWifiInitParam param;
     int8_t ret;
-#if 0
-    uint8_t mac_addr[6];
-    uint8_t u8IsMacAddrValid;
-#endif
 
     /* Initialize the board. */
     sysclk_init();
@@ -337,32 +315,9 @@ int main(void)
                 mac_addr[4], mac_addr[5]);
     }
 
-#if 0
-    // Toss up an AP and let user config SSID&pass.
-    m2m_wifi_get_otp_mac_address(mac_addr, &u8IsMacAddrValid);
-    if (!u8IsMacAddrValid) {
-        m2m_wifi_set_mac_address(gau8MacAddr);
-    }
-
-    /* Retrieve MAC address of the WINC and use it for AP name. */
-    m2m_wifi_get_mac_address(gau8MacAddr);
-    set_dev_name_to_mac((uint8_t *)gacDeviceName, gau8MacAddr);
-    set_dev_name_to_mac((uint8_t *)gstrM2MAPConfig.au8SSID, gau8MacAddr);
-    m2m_wifi_set_device_name((uint8_t *)gacDeviceName, (uint8_t)m2m_strlen((uint8_t *)gacDeviceName));
-    gstrM2MAPConfig.au8DHCPServerIP[0] = 0xC0; /* 192 */
-    gstrM2MAPConfig.au8DHCPServerIP[1] = 0xA8; /* 168 */
-    gstrM2MAPConfig.au8DHCPServerIP[2] = 0x01; /* 1 */
-    gstrM2MAPConfig.au8DHCPServerIP[3] = 0x01; /* 1 */
-
-    /* Start web provisioning mode. */
-    m2m_wifi_start_provision_mode((tstrM2MAPConfig *)&gstrM2MAPConfig, (char *)gacHttpProvDomainName, 1);
-    printf("\r\nProvision Mode started.\r\nConnect to [%s] via AP[%s] and fill up the page.\r\n\r\n",
-            MAIN_HTTP_PROV_SERVER_DOMAIN_NAME, gstrM2MAPConfig.au8SSID);
-#else
     // Hardcoded SSID & pass.
     m2m_wifi_connect((char*)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
             MAIN_WLAN_AUTH, (char*)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
-#endif
 
     while (1) {
         m2m_wifi_handle_events(NULL);
