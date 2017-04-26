@@ -172,10 +172,9 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
                 break;
 
             case SOCKET_MSG_SEND:
-                //tstrSocketSendMsg *snd = (tstrSocketSendMsg *)pvMsg;
                 if(exoPal.ops.on_send_complete) {
-                    // FIXME: where is the result code hiding?
-                    exoPal.ops.on_send_complete(&exoPal, 0);
+                    int16_t send_status = *((int16_t*)pvMsg);
+                    exoPal.ops.on_send_complete(&exoPal, send_status);
                 }
                 break;
 
