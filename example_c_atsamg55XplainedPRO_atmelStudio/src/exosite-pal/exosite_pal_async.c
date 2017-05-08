@@ -307,7 +307,7 @@ void exoPal_init(exoPal_state_t *state)
  */
 int exoPal_start(exoPal_state_t *state)
 {
-    char host[81];
+    char host[HOSTNAME_MAX_SIZE];
 
     if(state->state != exoPal_state_initalized) {
         return -1;
@@ -340,7 +340,8 @@ int exoPal_stop(exoPal_state_t *state)
 int exoPal_tcpSocketOpen(exoPal_state_t *state)
 {
     struct sockaddr_in addr_in;
-    int ret;
+    char hostname[HOSTNAME_MAX_SIZE];
+    int ret, flag;
 
     addr_in.sin_family = AF_INET;
     addr_in.sin_port = _htons(443);
@@ -358,10 +359,28 @@ int exoPal_tcpSocketOpen(exoPal_state_t *state)
         return -1;
     }
 
+    exoPal_getHostname(hostname, sizeof(hostname));
+
+    ret = setsockopt(state->tcp_socket, SOL_SSL_SOCKET, SO_SSL_SNI, hostname, strlen(hostname));
+    if (ret != SOCK_ERR_NO_ERROR) {
+        printf("setsockopt SNI error. (%d)\r\n", ret);
+        close(state->tcp_socket);
+        return ret;
+    }
+
+    flag = 1;
+    ret = setsockopt(state->tcp_socket, SOL_SSL_SOCKET, SO_SSL_ENABLE_SNI_VALIDATION, &flag, sizeof(flag));
+    if (ret != SOCK_ERR_NO_ERROR) {
+        printf("setsockopt ENABLE_SNI error. (%d)\r\n", ret);
+        close(state->tcp_socket);
+        return ret;
+    }
+
     /* If success, connect to socket */
     ret = connect(state->tcp_socket, (struct sockaddr *)&addr_in, sizeof(struct sockaddr_in));
     if (ret != SOCK_ERR_NO_ERROR) {
         printf("connect error. (%d)\r\n", ret);
+        close(state->tcp_socket);
         return SOCK_ERR_INVALID;
     }
 
