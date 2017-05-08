@@ -60,6 +60,7 @@ uint8_t exoPal_getCik(char * read_buffer, uint8_t maxlen);
 uint8_t exoPal_getVendor(char * read_buffer, uint8_t maxlen);
 uint8_t exoPal_getModel(char * read_buffer, uint8_t maxlen);
 uint8_t exoPal_getUuid(char * read_buffer, uint8_t maxlen);
+uint8_t exoPal_getHostname(char * read_buffer, uint8_t maxlen);
 
 
 // Async Sockets PAL.
@@ -105,7 +106,7 @@ struct exoPal_state_s {
 
 
 void exoPal_init(exoPal_state_t *state);
-int exoPal_start(exoPal_state_t *state, const char *host);
+int exoPal_start(exoPal_state_t *state);
 int exoPal_stop(exoPal_state_t *state);
 
 int exoPal_tcpSocketOpen(exoPal_state_t *state);

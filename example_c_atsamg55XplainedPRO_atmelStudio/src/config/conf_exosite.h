@@ -52,5 +52,9 @@
 #define EXOPAL_MODEL_TOKEN     "yyyyy"
 #endif
 
+#ifndef EXOPAL_HOSTNAME
+#define EXOPAL_HOSTNAME     "yyyyy.m2.exosite.com" // yyyyy.m2.exosite.io
+#endif
+
 #endif /*__CONF_EXOSITE_H__*/
 /* vim: set ai cin et sw=4 ts=4 : */
