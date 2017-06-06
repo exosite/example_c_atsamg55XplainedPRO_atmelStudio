@@ -35,6 +35,8 @@
           <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.services.flash" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.twi" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.basic.twi" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.applications.user_application.xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.utils.cmsis.samg55.source.template" value="Add" config="" content-id="Atmel.ASF" />
         </options>
@@ -275,6 +277,12 @@
           <file path="src/ASF/sam/drivers/usart/usart.h" framework="" version="3.34.1" source="sam\drivers\usart\usart.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/services/flash_efc/flash_efc.c" framework="" version="3.34.1" source="sam\services\flash_efc\flash_efc.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/services/flash_efc/flash_efc.h" framework="" version="3.34.1" source="sam\services\flash_efc\flash_efc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/twi/twi_slave.h" framework="" version="3.34.1" source="common\services\twi\twi_slave.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/twi/sam_twi/twi_master.h" framework="" version="3.34.1" source="common\services\twi\sam_twi\twi_master.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/twi/twi_master.h" framework="" version="3.34.1" source="common\services\twi\twi_master.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/twi/sam_twi/twi_slave.h" framework="" version="3.34.1" source="common\services\twi\sam_twi\twi_slave.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/twi/twi.c" framework="" version="3.34.1" source="sam\drivers\twi\twi.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/twi/twi.h" framework="" version="3.34.1" source="sam\drivers\twi\twi.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.34.1/common.applications.user_application.xplained_pro.samg55_xplained_pro/html/index.html" />
         <offline-documentation help="" />
@@ -354,6 +362,8 @@
       <Value>../src/ASF/sam/drivers/usart</Value>
       <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
       <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/sam/drivers/twi</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
@@ -408,6 +418,8 @@
       <Value>../src/ASF/sam/drivers/usart</Value>
       <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
       <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/sam/drivers/twi</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAMG55_XPLAINED_PRO -D__SAMG55J19__ -Dprintf=iprintf -Dscanf=iscanf</armgcc.preprocessingassembler.general.AssemblerFlags>
@@ -445,6 +457,8 @@
       <Value>../src/ASF/sam/drivers/usart</Value>
       <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
       <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/sam/drivers/twi</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
 </ArmGcc>
@@ -466,6 +480,7 @@
       <Value>__SAMG55J19__</Value>
       <Value>ARM_MATH_CM4=true</Value>
       <Value>printf=iprintf</Value>
+      <Value>__ATECC508__</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.IncludePaths>
@@ -503,6 +518,8 @@
       <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
       <Value>../src/exosite-pal</Value>
       <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/sam/drivers/twi</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
@@ -559,6 +576,8 @@
       <Value>../src/ASF/sam/drivers/usart</Value>
       <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
       <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/sam/drivers/twi</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
@@ -597,6 +616,8 @@
       <Value>../src/ASF/sam/drivers/usart</Value>
       <Value>../src/libexosite_c_http-device/exosite-lib/include</Value>
       <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/twi</Value>
+      <Value>../src/ASF/sam/drivers/twi</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
   <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
@@ -609,6 +630,7 @@
     <Folder Include="src\ASF\common\" />
     <Folder Include="src\ASF\common\boards\" />
     <Folder Include="src\ASF\common\components\" />
+    <Folder Include="src\ASF\common\components\crypto" />
     <Folder Include="src\ASF\common\components\wifi\" />
     <Folder Include="src\ASF\common\components\wifi\winc1500\" />
     <Folder Include="src\ASF\common\components\wifi\winc1500\bsp\" />
@@ -641,6 +663,8 @@
     <Folder Include="src\ASF\common\services\serial\sam_uart\" />
     <Folder Include="src\ASF\common\services\sleepmgr\" />
     <Folder Include="src\ASF\common\services\sleepmgr\sam\" />
+    <Folder Include="src\ASF\common\services\twi\" />
+    <Folder Include="src\ASF\common\services\twi\sam_twi\" />
     <Folder Include="src\ASF\common\utils\" />
     <Folder Include="src\ASF\common\utils\interrupt\" />
     <Folder Include="src\ASF\common\utils\stdio\" />
@@ -657,6 +681,7 @@
     <Folder Include="src\ASF\sam\drivers\pmc\" />
     <Folder Include="src\ASF\sam\drivers\spi\" />
     <Folder Include="src\ASF\sam\drivers\supc\" />
+    <Folder Include="src\ASF\sam\drivers\twi\" />
     <Folder Include="src\ASF\sam\drivers\usart\" />
     <Folder Include="src\ASF\sam\services\" />
     <Folder Include="src\ASF\sam\services\flash_efc\" />
@@ -700,12 +725,30 @@
     <None Include="src\ASF\common\services\serial\serial.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\ASF\common\components\crypto\ecc_crypto_ecc508.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\ecc_crypto_ecc508.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\ASF\common\services\serial\usart_serial.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ASF\common\services\sleepmgr\sam\sleepmgr.c">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="src\ASF\common\services\twi\twi_slave.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\twi\sam_twi\twi_master.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\twi\twi_master.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\twi\sam_twi\twi_slave.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\common\utils\stdio\read.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1336,6 +1379,12 @@
     <Compile Include="src\ASF\sam\drivers\supc\supc.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ASF\sam\drivers\twi\twi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\drivers\twi\twi.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\sam\drivers\usart\usart.c">
       <SubType>compile</SubType>
     </Compile>
