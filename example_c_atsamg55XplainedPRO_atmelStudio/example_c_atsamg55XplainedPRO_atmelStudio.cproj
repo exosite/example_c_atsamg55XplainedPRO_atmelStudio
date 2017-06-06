@@ -481,6 +481,7 @@
       <Value>ARM_MATH_CM4=true</Value>
       <Value>printf=iprintf</Value>
       <Value>__ATECC508__</Value>
+      <Value>ATCA_HAL_I2C</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.IncludePaths>
