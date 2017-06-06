@@ -520,6 +520,8 @@
       <Value>../src/ASF/sam/services/flash_efc</Value>
       <Value>../src/ASF/common/services/twi</Value>
       <Value>../src/ASF/sam/drivers/twi</Value>
+      <Value>../src/ASF/common/components/crypto/atecc508</Value>
+      <Value>../src/ASF/common/components/crypto/atecc508/cryptoauthlib/lib</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
@@ -631,6 +633,16 @@
     <Folder Include="src\ASF\common\boards\" />
     <Folder Include="src\ASF\common\components\" />
     <Folder Include="src\ASF\common\components\crypto" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\basic\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\hashes\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\host\" />
+    <Folder Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\tls\" />
     <Folder Include="src\ASF\common\components\wifi\" />
     <Folder Include="src\ASF\common\components\wifi\winc1500\" />
     <Folder Include="src\ASF\common\components\wifi\winc1500\bsp\" />
@@ -725,10 +737,172 @@
     <None Include="src\ASF\common\services\serial\serial.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\ASF\common\components\crypto\ecc_crypto_ecc508.c">
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\ASF\common\components\crypto\ecc_crypto_ecc508.h">
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_client.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_client.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_date.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_date.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_def.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_def.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_der.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_der.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_host_hw.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_host_hw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_host_sw.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atcacert\atcacert_host_sw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_cfgs.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_cfgs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_command.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_command.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_compiler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_device.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_device.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_devtypes.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_iface.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_iface.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\atca_status.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\basic\atca_basic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\basic\atca_basic.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\basic\atca_helpers.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\basic\atca_helpers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\cryptoauthlib.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_ecdsa.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_ecdsa.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_rand.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_rand.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_sha1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_sha1.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_sha2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\atca_crypto_sw_sha2.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\hashes\sha1_routines.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\hashes\sha1_routines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\hashes\sha2_routines.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\crypto\hashes\sha2_routines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\atca_hal.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\atca_hal.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\atca_start_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\atca_start_iface.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\hal_samg55_i2c_asf.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\hal_samg55_i2c_asf.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\hal\hal_samg55_timer_asf.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\host\atca_host.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\host\atca_host.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\tls\atcatls.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\tls\atcatls.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\cryptoauthlib\lib\tls\atcatls_cfg.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\ecc_crypto_ecc508.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\common\components\crypto\atecc508\ecc_crypto_ecc508.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\ASF\common\services\serial\usart_serial.c">
@@ -1412,6 +1586,9 @@
     <None Include="src\libexosite_c_http-device\exosite-lib\include\exosite_async.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\config\conf_atecc508.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\conf_exosite.h">
       <SubType>compile</SubType>
     </Compile>
