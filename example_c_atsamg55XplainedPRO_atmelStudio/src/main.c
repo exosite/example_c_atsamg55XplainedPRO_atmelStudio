@@ -34,6 +34,10 @@
 #include "conf_exosite.h"
 #include "exosite_async.h"
 
+#ifdef __ATECC508__
+#include "ecc_crypto_ecc508.h"
+#endif
+
 /** Exosite Library state. */
 Exosite_state_t exoLib;
 /** Plaform specific state for Exosite library. */
@@ -296,6 +300,20 @@ int main(void)
         while (1) {
         }
     }
+
+    /* Initialize CryptoAuthLib. */
+#ifdef __ATECC508__
+	eccInit(ECC508_TARGET_OP_TLS);
+
+#ifdef __TLS_ECC_ONLY_CIPHERS__
+	sslSetActiveCipherSuites(SSL_ECC_CIPHERS_AES_128);
+#endif /* __TLS_ECC_ONLY_CIPHERS__ */
+
+#ifdef __TLS_ECDHE_ECDSA_ONLY_CIPHERS__
+	sslSetActiveCipherSuites( SSL_CIPHER_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 | SSL_CIPHER_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256);
+#endif /* __TLS_ECDHE_ECDSA_ONLY_CIPHERS__ */
+
+#endif /* __ATECC508__ */
 
     /* Initialize socket API. */
     socketInit();

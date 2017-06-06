@@ -39,6 +39,7 @@
 -IASF/common/services/serial/sam_uart
 -IASF/common/services/sleepmgr
 -IASF/common/services/sleepmgr/sam
+-IASF/common/services/twi
 -IASF/common/utils
 -IASF/common/utils/interrupt
 -IASF/common/utils/stdio
@@ -55,6 +56,7 @@
 -IASF/sam/drivers/pmc
 -IASF/sam/drivers/spi
 -IASF/sam/drivers/supc
+-IASF/sam/drivers/twi
 -IASF/sam/drivers/usart
 -IASF/sam/services/flash_efc
 -IASF/sam/utils
