@@ -1911,6 +1911,49 @@ NMI_API sint8 sslEnableCertExpirationCheck(tenuSslCertExpSettings enuValidationS
 */
 NMI_API sint8 sslEnableCertExpirationCheck(tenuSslCertExpSettings enuValidationSetting);
 
+/** @} */
+/** @defgroup sslSetActiveCipherSuitesFn sslSetActiveCipherSuites
+ *  @ingroup SocketAPI
+ *   Overrides the default active SSL ciphers in the SSL module with a certain combination of ciphers selected by the caller using
+ *   a bitmap containing the required ciphers list.
+ *   There API is required only if the will not change the default ciphersuites, otherwise, it is not recommended to use.
+ */
+ /**@{*/
+/*!
+@fn	\
+	NMI_API sint8 sslSetActiveCipherSuites(uint32 u32SslCsBMP);
+
+@param [in]	u32SslCsBMP
+<p>A non-zero 32-bit integer bitmap containing the bitwise OR of the desired ciphers to be enabled 
+for the SSL module. The ciphersuites are defined in groups as follows:</p>
+<ul>
+	<li>@ref SSL_CIPHER_RSA_WITH_AES_128_CBC_SHA</li>
+	<li>@ref SSL_CIPHER_RSA_WITH_AES_128_CBC_SHA256</li>
+	<li>@ref SSL_CIPHER_DHE_RSA_WITH_AES_128_CBC_SHA</li>
+	<li>@ref SSL_CIPHER_DHE_RSA_WITH_AES_128_CBC_SHA256</li>
+	<li>@ref SSL_CIPHER_RSA_WITH_AES_128_GCM_SHA256</li>
+	<li>@ref SSL_CIPHER_DHE_RSA_WITH_AES_128_GCM_SHA256</li>
+	<li>@ref SSL_CIPHER_RSA_WITH_AES_256_CBC_SHA</li>
+	<li>@ref SSL_CIPHER_RSA_WITH_AES_256_CBC_SHA256</li>
+	<li>@ref SSL_CIPHER_DHE_RSA_WITH_AES_256_CBC_SHA</li>
+	<li>@ref SSL_CIPHER_DHE_RSA_WITH_AES_256_CBC_SHA256</li>
+	<li>@ref SSL_CIPHER_AES_128</li>
+	<li>@ref SSL_CIPHER_AES_256</li>
+	<li>@ref SSL_CIPHER_ALL</li>
+</ul>
+
+@return		
+	Possible return values are [SOCK_ERR_NO_ERROR](@ref SOCK_ERR_NO_ERROR) if case of success 
+	or [SOCK_ERR_INVALID_ARG](@ref SOCK_ERR_INVALID_ARG) if the map is zero.
+@remarks
+The default supported cipher suites are SSL_CIPHER_AES_128. The caller can override the default with any desired combination. 
+For example, to enable AES-256-SHA256 ONLY based ciphers the function should be called with this syntax:
+\code
+	sslSetActiveCipherSuites(SSL_CIPHER_DHE_RSA_WITH_AES_256_CBC_SHA256 | SSL_CIPHER_RSA_WITH_AES_256_CBC_SHA256);
+\endcode
+@note Passing the u32SslCsBMP as zero <strong>will not</strong> change the current active list.
+*/
+NMI_API sint8 sslSetActiveCipherSuites(uint32 u32SslCsBMP);
 
 /** @} */
 

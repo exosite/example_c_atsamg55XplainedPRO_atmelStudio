@@ -1307,3 +1307,34 @@ sint8 sslEnableCertExpirationCheck(tenuSslCertExpSettings enuValidationSetting)
 	strSettings.u32CertExpValidationOpt = (uint32)enuValidationSetting;
 	return SOCKET_REQUEST(SOCKET_CMD_SSL_EXP_CHECK, (uint8*)&strSettings, sizeof(tstrSslCertExpSettings), NULL, 0, 0);
 }
+
+/*********************************************************************
+Function
+	sslSetActiveCipherSuites
+
+Description
+	Send Ping request.
+
+Return
+	
+Author
+	Ahmed Ezzat
+
+Version
+	1.0
+
+Date
+	4 June 2015
+*********************************************************************/
+sint8 sslSetActiveCipherSuites(uint32 u32SslCsBMP)
+{
+	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
+	if(u32SslCsBMP != 0)
+	{
+		tstrSslSetActiveCsList	strCsList;
+	
+		strCsList.u32CsBMP = u32SslCsBMP;
+		s8Ret = SOCKET_REQUEST(SOCKET_CMD_SSL_SET_CS_LIST, (uint8*)&strCsList, sizeof(tstrSslSetActiveCsList), NULL, 0, 0);
+	}
+	return s8Ret;
+}
