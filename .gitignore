@@ -13,6 +13,8 @@ vs2012/exosite_c_libraries/Debug/
 docs/html/
 *.sdf
 vs/
+.vs/
+Debug/
 
 # Thumbnails
 ._*
