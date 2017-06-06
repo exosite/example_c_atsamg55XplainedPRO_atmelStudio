@@ -57,6 +57,9 @@
 #ifndef BOARD_FLEXCOM_TWI
 /** FLEXCOM base address for TWI mode*/
 #define BOARD_FLEXCOM_TWI    FLEXCOM4
+#define BOARD_TWI_IRQn       TWI4_IRQn
+#define BOARD_TWI_Handler    TWI4_Handler
+#define CONF_BOARD_TWI4
 #endif
 
 #ifndef BOARD_FLEXCOM_USART
