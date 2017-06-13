@@ -38,6 +38,8 @@
 #include "ecc_crypto_ecc508.h"
 #endif
 
+#define __TLS_ECDHE_ECDSA_ONLY_CIPHERS__
+
 /** Exosite Library state. */
 Exosite_state_t exoLib;
 /** Plaform specific state for Exosite library. */
