@@ -55,7 +55,7 @@
 ATCAIfaceCfg cfg_ateccx08a_i2c_default = {
 	.iface_type				= ATCA_I2C_IFACE,
 	.devtype				= ATECC508A,
-	.atcai2c.slave_address	= 0xC0,
+	.atcai2c.slave_address	= 0xB0,
 #ifdef __SAMD21G18A__	
 	.atcai2c.bus			= 0,
 	.atcai2c.baud			= CONF_ECC508_I2C_BAUD_RATE,
