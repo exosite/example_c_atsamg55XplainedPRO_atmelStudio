@@ -1,9 +1,8 @@
-/**
- * \file
+/** \brief Software implementation of the SHA1 algorithm.
  *
- * \brief Board configuration.
+ * Copyright (c) 2017 Atmel Corporation. All rights reserved.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * \atmel_crypto_device_library_license_start
  *
  * \asf_license_start
  *
@@ -22,9 +21,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,32 +35,64 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * \atmel_crypto_device_library_license_stop
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef __SHA1_ROUTINES_DOT_H__
+#define __SHA1_ROUTINES_DOT_H__
 
-#define CONF_BOARD_UART_CONSOLE
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
 
-#define CONF_BOARD_SPI
-#define CONF_BOARD_SPI_NPCS0
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
-
-
-#ifndef BOARD_FLEXCOM_TWI
-/** FLEXCOM base address for TWI mode*/
-#define BOARD_FLEXCOM_TWI    FLEXCOM4
-#define BOARD_TWI_IRQn       TWI4_IRQn
-#define BOARD_TWI_Handler    TWI4_Handler
-#define CONF_BOARD_TWI4
+#ifdef WIN32
+#include <windows.h>
+#include <assert.h>
 #endif
 
-#ifndef BOARD_FLEXCOM_USART
-/** FLEXCOM base address for USART mode*/
-#define BOARD_FLEXCOM_USART  FLEXCOM6
+#include <stdint.h>
+
+
+#ifndef U8
+#define U8 uint8_t
 #endif
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef U16
+#define U16 uint16_t
+#endif
+
+#ifndef U32
+#define U32 uint32_t
+#endif
+
+
+#ifndef memcpy_P
+#define memcpy_P memmove
+#endif
+
+#ifndef strcpy_P
+#define strcpy_P strcpy
+#endif
+
+#ifndef _WDRESET
+#define _WDRESET()
+#define _NOP()
+#endif
+
+typedef struct {
+	U32 h[20 / 4];   // Ensure it's word aligned
+	U32 buf[64 / 4]; // Ensure it's word aligned
+	U32 byteCount;
+	U32 byteCountHi;
+} CL_HashContext;
+
+#define leftRotate(x, n) (x) = (((x) << (n)) | ((x) >> (32 - (n))))
+
+void shaEngine(U32 *buf, U32 *h);
+void CL_hashInit(CL_HashContext *ctx);
+void CL_hashUpdate(CL_HashContext *ctx, const U8 *src, int nbytes);
+void CL_hashFinal(CL_HashContext *ctx, U8 *dest);
+void CL_hash(U8 *msg, int msgBytes, U8 *dest);
+
+#endif // __SHA1_ROUTINES_DOT_H__
+

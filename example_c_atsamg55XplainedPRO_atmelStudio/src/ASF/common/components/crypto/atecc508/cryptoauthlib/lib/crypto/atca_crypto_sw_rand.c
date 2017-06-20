@@ -1,9 +1,8 @@
-/**
- * \file
+/** \brief API wrapper for software random
  *
- * \brief Board configuration.
+ * Copyright (c) 2017 Atmel Corporation. All rights reserved.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * \atmel_crypto_device_library_license_start
  *
  * \asf_license_start
  *
@@ -22,9 +21,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,32 +35,18 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * \atmel_crypto_device_library_license_stop
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#include "atca_crypto_sw_rand.h"
 
-#define CONF_BOARD_UART_CONSOLE
+/** \brief return software generated random number
+ * \param[out] data ptr to space to receive the random
+ * \param[in] size of data buffer
+ * return ATCA_STATUS
+ */
 
-#define CONF_BOARD_SPI
-#define CONF_BOARD_SPI_NPCS0
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
-
-
-#ifndef BOARD_FLEXCOM_TWI
-/** FLEXCOM base address for TWI mode*/
-#define BOARD_FLEXCOM_TWI    FLEXCOM4
-#define BOARD_TWI_IRQn       TWI4_IRQn
-#define BOARD_TWI_Handler    TWI4_Handler
-#define CONF_BOARD_TWI4
-#endif
-
-#ifndef BOARD_FLEXCOM_USART
-/** FLEXCOM base address for USART mode*/
-#define BOARD_FLEXCOM_USART  FLEXCOM6
-#endif
-
-#endif /* CONF_BOARD_H_INCLUDED */
+int atcac_sw_random(uint8_t* data, size_t data_size)
+{
+	return ATCA_UNIMPLEMENTED;
+}

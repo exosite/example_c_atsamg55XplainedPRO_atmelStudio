@@ -1,9 +1,8 @@
-/**
- * \file
+/** \brief Wrapper API for SHA 1 routines
  *
- * \brief Board configuration.
+ * Copyright (c) 2017 Atmel Corporation. All rights reserved.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * \atmel_crypto_device_library_license_start
  *
  * \asf_license_start
  *
@@ -22,9 +21,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,32 +35,52 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * \atmel_crypto_device_library_license_stop
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_UART_CONSOLE
+#include "atca_crypto_sw_sha1.h"
+#include "hashes/sha1_routines.h"
 
-#define CONF_BOARD_SPI
-#define CONF_BOARD_SPI_NPCS0
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
+int atcac_sw_sha1_init(atcac_sha1_ctx* ctx)
+{
+	if (sizeof(CL_HashContext) > sizeof(atcac_sha1_ctx))
+		return ATCA_ASSERT_FAILURE; // atcac_sha1_ctx isn't large enough for this implementation
+	CL_hashInit((CL_HashContext*)ctx);
 
+	return ATCA_SUCCESS;
+}
 
-#ifndef BOARD_FLEXCOM_TWI
-/** FLEXCOM base address for TWI mode*/
-#define BOARD_FLEXCOM_TWI    FLEXCOM4
-#define BOARD_TWI_IRQn       TWI4_IRQn
-#define BOARD_TWI_Handler    TWI4_Handler
-#define CONF_BOARD_TWI4
-#endif
+int atcac_sw_sha1_update(atcac_sha1_ctx* ctx, const uint8_t* data, size_t data_size)
+{
+	CL_hashUpdate((CL_HashContext*)ctx, data, (int)data_size);
 
-#ifndef BOARD_FLEXCOM_USART
-/** FLEXCOM base address for USART mode*/
-#define BOARD_FLEXCOM_USART  FLEXCOM6
-#endif
+	return ATCA_SUCCESS;
+}
 
-#endif /* CONF_BOARD_H_INCLUDED */
+int atcac_sw_sha1_finish(atcac_sha1_ctx* ctx, uint8_t digest[ATCA_SHA1_DIGEST_SIZE])
+{
+	CL_hashFinal((CL_HashContext*)ctx, digest);
+
+	return ATCA_SUCCESS;
+}
+
+int atcac_sw_sha1(const uint8_t* data, size_t data_size, uint8_t digest[ATCA_SHA1_DIGEST_SIZE])
+{
+	int ret;
+	atcac_sha1_ctx ctx;
+
+	ret = atcac_sw_sha1_init(&ctx);
+	if (ret != ATCA_SUCCESS)
+		return ret;
+
+	ret = atcac_sw_sha1_update(&ctx, data, data_size);
+	if (ret != ATCA_SUCCESS)
+		return ret;
+
+	ret = atcac_sw_sha1_finish(&ctx, digest);
+	if (ret != ATCA_SUCCESS)
+		return ret;
+
+	return ATCA_SUCCESS;
+}

@@ -1,9 +1,10 @@
-/**
- * \file
+/** \file atca_compiler.h
+ * ATCA is meant to be portable across architectures, even non-Atmel architectures and compiler environments.
+ * This file is for isolating compiler specific macros.
  *
- * \brief Board configuration.
+ * Copyright (c) 2017 Atmel Corporation. All rights reserved.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * \atmel_crypto_device_library_license_start
  *
  * \asf_license_start
  *
@@ -22,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,32 +37,37 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * \atmel_crypto_device_library_license_stop
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_UART_CONSOLE
+#ifndef ATCA_COMPILER_H_
+#define ATCA_COMPILER_H_
 
-#define CONF_BOARD_SPI
-#define CONF_BOARD_SPI_NPCS0
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
+#if defined(__clang__)
+/* Clang/LLVM. ---------------------------------------------- */
 
+#elif defined(__ICC) || defined(__INTEL_COMPILER)
+/* Intel ICC/ICPC. ------------------------------------------ */
 
-#ifndef BOARD_FLEXCOM_TWI
-/** FLEXCOM base address for TWI mode*/
-#define BOARD_FLEXCOM_TWI    FLEXCOM4
-#define BOARD_TWI_IRQn       TWI4_IRQn
-#define BOARD_TWI_Handler    TWI4_Handler
-#define CONF_BOARD_TWI4
+#elif defined(__GNUC__) || defined(__GNUG__)
+/* GNU GCC/G++. --------------------------------------------- */
+
+#elif defined(__HP_cc) || defined(__HP_aCC)
+/* Hewlett-Packard C/aC++. ---------------------------------- */
+
+#elif defined(__IBMC__) || defined(__IBMCPP__)
+/* IBM XL C/C++. -------------------------------------------- */
+
+#elif defined(_MSC_VER)
+/* Microsoft Visual Studio. --------------------------------- */
+
+#elif defined(__PGI)
+/* Portland Group PGCC/PGCPP. ------------------------------- */
+
+#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+/* Oracle Solaris Studio. ----------------------------------- */
+
 #endif
 
-#ifndef BOARD_FLEXCOM_USART
-/** FLEXCOM base address for USART mode*/
-#define BOARD_FLEXCOM_USART  FLEXCOM6
-#endif
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* ATCA_COMPILER_H_ */

@@ -1,9 +1,8 @@
-/**
- * \file
+/** \brief Software implementation of the SHA256 algorithm.
  *
- * \brief Board configuration.
+ * Copyright (c) 2017 Atmel Corporation. All rights reserved.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * \atmel_crypto_device_library_license_start
  *
  * \asf_license_start
  *
@@ -22,9 +21,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,32 +35,39 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * \atmel_crypto_device_library_license_stop
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef SHA2_ROUTINES_H
+#define SHA2_ROUTINES_H
 
-#define CONF_BOARD_UART_CONSOLE
+#include <stdint.h>
 
-#define CONF_BOARD_SPI
-#define CONF_BOARD_SPI_NPCS0
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
+#define SHA256_DIGEST_SIZE (32)
+#define SHA256_BLOCK_SIZE  (64)
 
-
-#ifndef BOARD_FLEXCOM_TWI
-/** FLEXCOM base address for TWI mode*/
-#define BOARD_FLEXCOM_TWI    FLEXCOM4
-#define BOARD_TWI_IRQn       TWI4_IRQn
-#define BOARD_TWI_Handler    TWI4_Handler
-#define CONF_BOARD_TWI4
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#ifndef BOARD_FLEXCOM_USART
-/** FLEXCOM base address for USART mode*/
-#define BOARD_FLEXCOM_USART  FLEXCOM6
+typedef struct {
+	uint32_t total_msg_size;                //!< Total number of message bytes processed
+	uint32_t block_size;                    //!< Number of bytes in current block
+	uint8_t block[SHA256_BLOCK_SIZE * 2];   //!< Unprocessed message storage
+	uint32_t hash[8];                       //!< Hash state
+} sw_sha256_ctx;
+
+void sw_sha256_init(sw_sha256_ctx* ctx);
+
+void sw_sha256_update(sw_sha256_ctx* ctx, const uint8_t* message, uint32_t len);
+
+void sw_sha256_final(sw_sha256_ctx * ctx, uint8_t digest[SHA256_DIGEST_SIZE]);
+
+void sw_sha256(const uint8_t * message, unsigned int len, uint8_t digest[SHA256_DIGEST_SIZE]);
+
+#ifdef __cplusplus
+}
 #endif
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif // SHA2_ROUTINES_H
+

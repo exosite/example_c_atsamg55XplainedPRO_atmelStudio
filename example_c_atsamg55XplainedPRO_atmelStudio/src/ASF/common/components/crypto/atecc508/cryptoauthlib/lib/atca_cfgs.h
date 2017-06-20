@@ -1,9 +1,11 @@
-/**
- * \file
+/** \file atca_cfgs.h
+ * a set of default configurations for various ATCA devices and interfaces
  *
- * \brief Board configuration.
+ * \brief a set of default configurations for various ATCA devices and interfaces
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2017 Atmel Corporation. All rights reserved.
+ *
+ * \atmel_crypto_device_library_license_start
  *
  * \asf_license_start
  *
@@ -22,9 +24,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,32 +38,44 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * \atmel_crypto_device_library_license_stop
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_UART_CONSOLE
+#ifndef ATCA_CFGS_H_
+#define ATCA_CFGS_H_
 
-#define CONF_BOARD_SPI
-#define CONF_BOARD_SPI_NPCS0
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
+#include "atca_iface.h"
 
-
-#ifndef BOARD_FLEXCOM_TWI
-/** FLEXCOM base address for TWI mode*/
-#define BOARD_FLEXCOM_TWI    FLEXCOM4
-#define BOARD_TWI_IRQn       TWI4_IRQn
-#define BOARD_TWI_Handler    TWI4_Handler
-#define CONF_BOARD_TWI4
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#ifndef BOARD_FLEXCOM_USART
-/** FLEXCOM base address for USART mode*/
-#define BOARD_FLEXCOM_USART  FLEXCOM6
-#endif
+/** \brief default configuration for an ECCx08A device on the first logical I2C bus */
+extern ATCAIfaceCfg cfg_ateccx08a_i2c_default;
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/** \brief default configuration for an ECCx08A device on the logical SWI bus over UART*/
+extern ATCAIfaceCfg cfg_ateccx08a_swi_default;
+
+/** \brief default configuration for a SHA204A device on the first logical I2C bus */
+extern ATCAIfaceCfg cfg_sha204a_i2c_default;
+
+/** \brief default configuration for an SHA204A device on the logical SWI bus over UART*/
+extern ATCAIfaceCfg cfg_sha204a_swi_default;
+
+/** \brief default configuration for Kit protocol over a CDC interface */
+extern ATCAIfaceCfg cfg_ecc508_kitcdc_default;
+
+/** \brief default configuration for Kit protocol over a HID interface */
+extern ATCAIfaceCfg cfg_ecc508_kithid_default;
+
+/** \brief default configuration for Kit protocol over a HID interface for SHA204 */
+extern ATCAIfaceCfg cfg_sha204_kithid_default;
+
+/** \brief example of a default configuration for AES132 SPI */
+extern ATCAIfaceCfg cfg_ataes132_spi_default;
+
+#ifdef __cplusplus
+}
+#endif
+#endif /* ATCA_CFGS_H_ */

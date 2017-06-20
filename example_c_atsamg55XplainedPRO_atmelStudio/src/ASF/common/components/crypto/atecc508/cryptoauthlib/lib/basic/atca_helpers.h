@@ -1,9 +1,8 @@
-/**
- * \file
+/** \brief Helpers to support the CryptoAuthLib Basic API methods
  *
- * \brief Board configuration.
+ * Copyright (c) 2017 Atmel Corporation. All rights reserved.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * \atmel_crypto_device_library_license_start
  *
  * \asf_license_start
  *
@@ -22,9 +21,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,32 +35,45 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * \atmel_crypto_device_library_license_stop
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef ATCA_HELPERS_H_
+#define ATCA_HELPERS_H_
 
-#define CONF_BOARD_UART_CONSOLE
+#include "cryptoauthlib/lib/cryptoauthlib.h"
 
-#define CONF_BOARD_SPI
-#define CONF_BOARD_SPI_NPCS0
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
+/** \defgroup atcab_ Basic Crypto API methods (atcab_)
+ *
+ * \brief
+ * These methods provide the most convenient, simple API to CryptoAuth chips
+ *
+   @{ */
 
-
-#ifndef BOARD_FLEXCOM_TWI
-/** FLEXCOM base address for TWI mode*/
-#define BOARD_FLEXCOM_TWI    FLEXCOM4
-#define BOARD_TWI_IRQn       TWI4_IRQn
-#define BOARD_TWI_Handler    TWI4_Handler
-#define CONF_BOARD_TWI4
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#ifndef BOARD_FLEXCOM_USART
-/** FLEXCOM base address for USART mode*/
-#define BOARD_FLEXCOM_USART  FLEXCOM6
+#ifdef ATCAPRINTF
+ATCA_STATUS atcab_bin2hex(const uint8_t* binary, int binLen, char* asciiHex, int* asciiHexLen);
+ATCA_STATUS atcab_bin2hex_(const uint8_t* binary, int binLen, char* asciiHex, int* asciiHexLen, bool addSpace);
+ATCA_STATUS atcab_hex2bin(const char* asciiHex, int asciiHexLen, uint8_t* binary, int* binLen);
+#else
+
+#define atcab_bin2hex
+
 #endif
 
-#endif /* CONF_BOARD_H_INCLUDED */
+ATCA_STATUS packHex(const char* asciiHex, int asciiHexLen, char* packedHex, int* packedLen);
+bool isDigit(char c);
+bool isWhiteSpace(char c);
+bool isHexAlpha(char c);
+bool isHex(char c);
+bool isHexDigit(char c);
+
+#ifdef __cplusplus
+}
+#endif
+
+/** @} */
+#endif /* ATCA_HELPERS_H_ */
