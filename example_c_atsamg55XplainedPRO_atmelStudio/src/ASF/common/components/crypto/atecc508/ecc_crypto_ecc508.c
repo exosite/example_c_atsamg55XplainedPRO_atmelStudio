@@ -57,7 +57,7 @@ INCLUDES
 MACROS
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
-//#define __DBG__
+#define __DBG__
 
 #ifdef __DBG__
 #define ECC_DBG								M2M_INFO
@@ -85,7 +85,7 @@ do														\
 GLOBALS
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
-uint16		gu16SlotIdx = 2;
+volatile uint16		gu16SlotIdx = 2;
 
 
 
@@ -99,18 +99,21 @@ tstrECPoint			*pstrClientPubKey
 {
 	uint16	u16KeySlot	= gu16SlotIdx;
 	sint8	s8Ret		= M2M_ERR_FAIL;
+	ATCA_STATUS rs;
 	
-	ECC_DBG("ECDH\n");
+	ECC_DBG("ECDH: create_key: keySlot: %d\n", u16KeySlot);
 	if(atcatls_create_key(u16KeySlot, pstrClientPubKey->X) == ATCA_SUCCESS)
 	{
 		pstrClientPubKey->u16Size = 32;
-		if(atcab_ecdh(u16KeySlot, pstrServerPubKey->X, pu8ECDHSharedSecret) == ATCA_SUCCESS)
+		ECC_DBG("ECDH: ecdh: keySlot: %d\n", u16KeySlot);
+		if((rs=atcab_ecdh(u16KeySlot, pstrServerPubKey->X, pu8ECDHSharedSecret)) == ATCA_SUCCESS)
 		{
 			s8Ret = M2M_SUCCESS;
 			gu16SlotIdx ++;
 			if(gu16SlotIdx == 5)
 				gu16SlotIdx = 1;
 		}
+		ECC_DBG("ECDH: Status: %d\n", rs);
 	}
 	return s8Ret;
 }
@@ -285,31 +288,35 @@ static void eccProcessREQ(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 	
 	strECCResp.u16Status	= 1;
 
+	ECC_DBG("PREQ: opcode: %d, size: %d, addr: %d\n", u8OpCode, u16DataSize, u32Addr);
 	if(hif_receive(u32Addr, (uint8*)&strEccREQ, sizeof(tstrEccReqInfo), 0) == M2M_SUCCESS)
 	{
+		ECC_DBG("PREQ: hif_receive: req: %d, status: %d, seq: %d, ud: %d\n", strEccREQ.u16REQ, strEccREQ.u16Status, strEccREQ.u32SeqNo, strEccREQ.u32UserData);
 		switch(strEccREQ.u16REQ)
 		{
-		case ECC_REQ_CLIENT_ECDH:
+		case ECC_REQ_CLIENT_ECDH: // 1
 			strECCResp.u16Status = ecdhDeriveClientSharedSecret(&strEccREQ.strEcdhREQ.strPubKey, strECCResp.strEcdhREQ.au8Key, &strECCResp.strEcdhREQ.strPubKey);
+			M2M_DUMP_BUF("strPubKey", &strECCResp.strEcdhREQ.strPubKey, sizeof(strECCResp.strEcdhREQ.strPubKey));
 			break;
 
-		case ECC_REQ_GEN_KEY:
+		case ECC_REQ_GEN_KEY: // 3
 			strECCResp.u16Status = ecdhDeriveKeyPair(&strECCResp.strEcdhREQ.strPubKey);
 			break;
 
-		case ECC_REQ_SERVER_ECDH:
+		case ECC_REQ_SERVER_ECDH: // 2
 			strECCResp.u16Status = ecdhDeriveServerSharedSecret(strEccREQ.strEcdhREQ.strPubKey.u16PrivKeyID, &strEccREQ.strEcdhREQ.strPubKey, strECCResp.strEcdhREQ.au8Key);
 			break;
 			
-		case ECC_REQ_SIGN_VERIFY:
+		case ECC_REQ_SIGN_VERIFY: // 5
 			strECCResp.u16Status = ecdsaProcessSignVerifREQ(strEccREQ.strEcdsaVerifyREQ.u32nSig, (u32Addr + sizeof(tstrEccReqInfo)));
 			break;
 			
-		case ECC_REQ_SIGN_GEN:
+		case ECC_REQ_SIGN_GEN: // 4
 			strECCResp.u16Status = ecdsaProcessSignGenREQ((u32Addr + sizeof(tstrEccReqInfo)), &strEccREQ.strEcdsaSignREQ, au8Sig, &u16RspDataSz);
 			pu8RspDataBuff = au8Sig;
 			break;
 		}
+		ECC_DBG("PREQ: Status: %d\n", strECCResp.u16Status);
 
 		strECCResp.u16REQ		= strEccREQ.u16REQ;
 		strECCResp.u32UserData	= strEccREQ.u32UserData;
@@ -334,7 +341,14 @@ void eccInit(tenuEcc508TargetOp enuTargetMode)
 	{
 		M2M_INFO("ATECC508 INIT FAIL <%0X>\n", ret);		
 	}
-	
+#if 1
+	{
+		uint8	configZone[128];
+		ret = atcab_read_ecc_config_zone(configZone);
+		M2M_INFO("ATECC508 Read %X\r\n", ret);
+		M2M_DUMP_BUF("configZone", configZone, sizeof(configZone));
+	}
+#endif
 	ret = atcab_is_locked(ATCA_ZONE_CONFIG, &lock_state);
 	if(ret == ATCA_SUCCESS && lock_state == false)
 	{
