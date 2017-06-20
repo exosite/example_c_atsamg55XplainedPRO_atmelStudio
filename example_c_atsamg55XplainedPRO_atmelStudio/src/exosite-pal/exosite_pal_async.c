@@ -41,6 +41,8 @@
 
 #include "flash_efc.h"
 
+extern uint16 gu16SlotIdx;
+
 /*****************************************************************************
  * \defgroup Utility PAL functions
  * @{
@@ -388,6 +390,7 @@ int exoPal_tcpSocketOpen(exoPal_state_t *state)
     return 0;
 }
 
+
 /** \brief Closes a tcp socket
  * \param[in,out] state The PAL state.
  *
@@ -405,6 +408,7 @@ int exoPal_tcpSocketClose(exoPal_state_t *state)
     if(state->ops.on_socket_closed) {
         state->ops.on_socket_closed(state, 0);
     }
+	gu16SlotIdx = 2;
     return 0;
 }
 
