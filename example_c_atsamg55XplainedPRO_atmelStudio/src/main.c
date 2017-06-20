@@ -284,7 +284,7 @@ int main(void)
 
     /* Initialize the UART console. */
     configure_console();
-    printf("-- WINC1500 Exosite client example --\r\n"
+    printf("-- WINC1500 Exosite client example v1.1.0 --\r\n"
         "-- "BOARD_NAME " --\r\n"
         "-- Compiled: "__DATE__ " "__TIME__ " --\r\n");
 
