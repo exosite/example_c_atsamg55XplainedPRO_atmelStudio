@@ -26,6 +26,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <string.h>
+#include "ioport.h"
 #include "asf.h"
 #include "bsp/include/nm_bsp.h"
 #include "driver/include/m2m_wifi.h"
@@ -303,6 +304,26 @@ int main(void)
         }
     }
 
+	/* Initialize Buttons and LEDs */
+	#define LED1    EXT3_PIN_7 // IOPORT_CREATE_PIN(PORTA, 7)
+	#define LED2    EXT3_PIN_8 // IOPORT_CREATE_PIN(PORTA, 8)
+	#define LED3    EXT3_PIN_6 // IOPORT_CREATE_PIN(PORTA, 6)
+	#define BUTTON1 EXT3_PIN_9 // IOPORT_CREATE_PIN(PORTA, 9)
+	#define BUTTON2 EXT3_PIN_3 // IOPORT_CREATE_PIN(PORTA, 3)
+	#define BUTTON3 EXT3_PIN_4 // IOPORT_CREATE_PIN(PORTA, 4)
+
+	ioport_init();
+
+	ioport_set_pin_dir(LED1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED2, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED3, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(BUTTON1, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON1, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(BUTTON2, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON2, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(BUTTON3, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON3, IOPORT_MODE_PULLUP);
+
     /* Initialize CryptoAuthLib. */
 #ifdef __ATECC508__
 	eccInit(ECC508_TARGET_OP_TLS);
@@ -345,7 +366,29 @@ int main(void)
             MAIN_WLAN_AUTH, (char*)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
     while (1) {
-        m2m_wifi_handle_events(NULL);
+        // m2m_wifi_handle_events(NULL);
+
+		// check for increases
+		if (ioport_get_pin_level(BUTTON1))
+		{
+			ioport_set_pin_level(LED1, true);
+			// TODO: exosite write
+		} 
+		else
+		{
+			ioport_set_pin_level(LED1, false);
+		}
+
+		// check for decreases
+		if (ioport_get_pin_level(BUTTON2))
+		{
+			ioport_set_pin_level(LED2, true);
+			// TODO: exosite write
+		}
+		else
+		{
+			ioport_set_pin_level(LED2, false);
+		}
     }
 
     return 0;
