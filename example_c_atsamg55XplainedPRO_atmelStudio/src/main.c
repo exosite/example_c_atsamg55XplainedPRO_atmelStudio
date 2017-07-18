@@ -366,13 +366,17 @@ int main(void)
             MAIN_WLAN_AUTH, (char*)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
     while (1) {
-        // m2m_wifi_handle_events(NULL);
+	
+		int temperature = 70;
+	    
+		m2m_wifi_handle_events(NULL);
 
 		// check for increases
 		if (ioport_get_pin_level(BUTTON1))
 		{
 			ioport_set_pin_level(LED1, true);
-			// TODO: exosite write
+			temperature++;
+			// TODO: exosite_write(temperature);
 		} 
 		else
 		{
@@ -383,7 +387,8 @@ int main(void)
 		if (ioport_get_pin_level(BUTTON2))
 		{
 			ioport_set_pin_level(LED2, true);
-			// TODO: exosite write
+			temperature--;
+			// TODO: exosite_write(temperature)
 		}
 		else
 		{
