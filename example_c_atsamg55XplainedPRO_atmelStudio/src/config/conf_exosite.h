@@ -36,24 +36,63 @@
 #define __CONF_EXOSITE_H__
 
 #ifndef MAIN_WLAN_SSID
-#define MAIN_WLAN_SSID "theCloud"
+
+/*
+ * Configure the MAIN_WLAN_SSID define.
+ *
+ * This is the SSID to the WiFi network.
+ */
+
+#define MAIN_WLAN_SSID "<SSID>"
 #endif
 #ifndef MAIN_WLAN_AUTH
 #define MAIN_WLAN_AUTH M2M_WIFI_SEC_WPA_PSK
 #endif
 #ifndef MAIN_WLAN_PSK
-#define MAIN_WLAN_PSK "xxxxx"
+
+/*
+ * Configure the MAIN_WLAN_PSK define.
+ *
+ * This is the password to the WiFi network.
+ */
+
+#define MAIN_WLAN_PSK "<PASSWORD>"
 #endif
 
+#ifndef EXOPAL_PRODUCT_ID
+
+/*
+ * Configure the EXOPAL_PRODUCT_ID define.
+ *
+ * This is the alpha-numeric string found in your
+ * Murano Product Web UI or using the MuranoCLI
+ * command line tool.
+ */
+
+#define EXOPAL_PRODUCT_ID "<PRODUCT_ID>"
+#endif
 #ifndef EXOPAL_VENDOR_TOKEN
-#define EXOPAL_VENDOR_TOKEN    "yyyyy"
+#define EXOPAL_VENDOR_TOKEN    EXOPAL_PRODUCT_ID
 #endif
 #ifndef EXOPAL_MODEL_TOKEN
-#define EXOPAL_MODEL_TOKEN     "yyyyy"
+#define EXOPAL_MODEL_TOKEN     EXOPAL_VENDOR_TOKEN
 #endif
 
 #ifndef EXOPAL_HOSTNAME
-#define EXOPAL_HOSTNAME     "yyyyy.m2.exosite.com" // yyyyy.m2.exosite.io
+
+/*
+ * The EXOPAL_HOSTNAME define is configured according to
+ * the EXOPAL_PRODUCT_ID configured, above. The hostname
+ * is tailored to clients like the WINC1500 that are using
+ * the ECC508 crypto coprocessor. Clients such as these
+ * can have difficulty when the server (Murano) presents
+ * an RSA cert to the client. For this reason, Exosite
+ * has a hostname available to all Products that will
+ * force Murano present an ECDSA cert. This hostname is
+ * PRODUCT_ID.m2-ecdsa.exosite.io.
+ */
+
+#define EXOPAL_HOSTNAME     EXOPAL_PRODUCT_ID ".m2-ecdsa.exosite.io"
 #endif
 
 #endif /*__CONF_EXOSITE_H__*/
