@@ -33,10 +33,11 @@
           <option id="common.components.wifi.winc1500" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="sam.services.flash" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="sam.drivers.twi" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.basic.twi" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.twi" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.services.flash" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.rtc" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.applications.user_application.xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.utils.cmsis.samg55.source.template" value="Add" config="" content-id="Atmel.ASF" />
         </options>
@@ -283,6 +284,8 @@
           <file path="src/ASF/common/services/twi/sam_twi/twi_slave.h" framework="" version="3.34.1" source="common\services\twi\sam_twi\twi_slave.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/drivers/twi/twi.c" framework="" version="3.34.1" source="sam\drivers\twi\twi.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/drivers/twi/twi.h" framework="" version="3.34.1" source="sam\drivers\twi\twi.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/rtc/rtc.c" framework="" version="3.34.1" source="sam\drivers\rtc\rtc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/rtc/rtc.h" framework="" version="3.34.1" source="sam\drivers\rtc\rtc.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.34.1/common.applications.user_application.xplained_pro.samg55_xplained_pro/html/index.html" />
         <offline-documentation help="" />
@@ -364,6 +367,7 @@
       <Value>../src/ASF/sam/services/flash_efc</Value>
       <Value>../src/ASF/common/services/twi</Value>
       <Value>../src/ASF/sam/drivers/twi</Value>
+      <Value>../src/ASF/sam/drivers/rtc</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
@@ -420,6 +424,7 @@
       <Value>../src/ASF/sam/services/flash_efc</Value>
       <Value>../src/ASF/common/services/twi</Value>
       <Value>../src/ASF/sam/drivers/twi</Value>
+      <Value>../src/ASF/sam/drivers/rtc</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAMG55_XPLAINED_PRO -D__SAMG55J19__ -Dprintf=iprintf -Dscanf=iscanf</armgcc.preprocessingassembler.general.AssemblerFlags>
@@ -459,6 +464,7 @@
       <Value>../src/ASF/sam/services/flash_efc</Value>
       <Value>../src/ASF/common/services/twi</Value>
       <Value>../src/ASF/sam/drivers/twi</Value>
+      <Value>../src/ASF/sam/drivers/rtc</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
 </ArmGcc>
@@ -523,6 +529,7 @@
       <Value>../src/ASF/sam/drivers/twi</Value>
       <Value>../src/ASF/common/components/crypto/atecc508</Value>
       <Value>../src/ASF/common/components/crypto/atecc508/cryptoauthlib/lib</Value>
+      <Value>../src/ASF/sam/drivers/rtc</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
@@ -581,6 +588,7 @@
       <Value>../src/ASF/sam/services/flash_efc</Value>
       <Value>../src/ASF/common/services/twi</Value>
       <Value>../src/ASF/sam/drivers/twi</Value>
+      <Value>../src/ASF/sam/drivers/rtc</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
@@ -621,6 +629,7 @@
       <Value>../src/ASF/sam/services/flash_efc</Value>
       <Value>../src/ASF/common/services/twi</Value>
       <Value>../src/ASF/sam/drivers/twi</Value>
+      <Value>../src/ASF/sam/drivers/rtc</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
   <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
@@ -692,6 +701,7 @@
     <Folder Include="src\ASF\sam\drivers\pdc\pdc_uart_example\" />
     <Folder Include="src\ASF\sam\drivers\pio\" />
     <Folder Include="src\ASF\sam\drivers\pmc\" />
+    <Folder Include="src\ASF\sam\drivers\rtc\" />
     <Folder Include="src\ASF\sam\drivers\spi\" />
     <Folder Include="src\ASF\sam\drivers\supc\" />
     <Folder Include="src\ASF\sam\drivers\twi\" />
@@ -936,6 +946,12 @@
     <Compile Include="src\ASF\sam\drivers\pio\pio_handler.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ASF\sam\drivers\rtc\rtc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\drivers\rtc\rtc.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\sam\drivers\spi\spi.c">
       <SubType>compile</SubType>
     </Compile>
