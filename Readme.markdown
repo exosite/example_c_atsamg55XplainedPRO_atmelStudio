@@ -13,6 +13,11 @@ utilizing the [Exosite C library](https://github.com/exosite/libexosite_c_http-d
 6. `git submodule update`
 7. In Atmel Studio: Open > Project/Solution…
 8. Navigate to `example_c_atsamg55XplainedPRO_atmelStudio.atsln`
-9. Build > Rebuild Solution
-10. Debug > Start Debugging and Break
+9. Open the file `example_c_atsamg55XplainedPRO_atmelStudio/src/config/conf_exosite.h`.
+10. Edit the `#define MAIN_WLAN_SSID`, replacing `<SSID>` with the SSID of your secure Wi-Fi access point (e.g., linksys, NETGEAR, etc.).
+11. Edit the `#define MAIN_WLAN_PSK`, replacing `<PASSWORD>` with the password to your Wi-Fi access point.
+12. Edit the `#define EXOPAL_PRODUCT_ID`, replacing `<PRODUCT_ID>` with your Product ID from the first step in this tutorial.
+13. Save the file.
+14. Build > Rebuild Solution
+15. Debug > Start Without Debugging (Ctrl+Alt+F5)
 
