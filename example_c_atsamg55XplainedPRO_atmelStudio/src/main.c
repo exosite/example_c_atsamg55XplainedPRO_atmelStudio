@@ -88,7 +88,7 @@ int exolib_start_complete(Exosite_state_t *exo, int status)
     printf(":: Exolib ready. Getting timestamp from server.\r\n");
 
     // Got get the timestamp from the server.
-    exosite_timestamp(exo);
+    // exosite_timestamp(exo);
     return 0;
 }
 
@@ -381,9 +381,6 @@ sslSetActiveCipherSuites( SSL_ECC_ALL_CIPHERS | SSL_NON_ECC_CIPHERS_AES_128 );
 	uint32_t start_time;
 	uint32_t button1_time;
 	uint32_t button2_time;
-	uint32_t button1_debounce = 0;
-	uint32_t button2_debounce = 0;
-
 
 	rtc_get_time(RTC, &hour, &minute, &start_time);
 	rtc_get_time(RTC, &hour, &minute, &button1_time);
@@ -415,23 +412,6 @@ sslSetActiveCipherSuites( SSL_ECC_ALL_CIPHERS | SSL_NON_ECC_CIPHERS_AES_128 );
 					printf("Waiting on exosite_write to complete.\r\n");
 				}
 			}
-			else
-			{
-				if (button1_debounce  == 0)
-				{
-					printf("main: Debouncing BUTTON1...\r\n");
-				}
-				else if (button1_debounce >= 200)
-				{
-					button1_debounce = 0;
-				}
-				else
-				{
-					button1_debounce = button1_debounce + 1;
-				}
-			}
-
-		} 
 		else
 		{
 			ioport_set_pin_level(LED1, false);
@@ -458,22 +438,6 @@ sslSetActiveCipherSuites( SSL_ECC_ALL_CIPHERS | SSL_NON_ECC_CIPHERS_AES_128 );
 				{
 					printf("Waiting on exosite_write to complete.\r\n");
 				}
-			}
-			else
-			{
-
-				if (button2_debounce  == 0)
-				{
-				    printf("main: Debouncing BUTTON2...\r\n");
-				}
-				else if (button2_debounce >= 200)
-				{
-				    button2_debounce = 0;
-				}
-				else
-				{
-				    button2_debounce = button2_debounce + 1;
-				}   
 			}
 		}
 		else
