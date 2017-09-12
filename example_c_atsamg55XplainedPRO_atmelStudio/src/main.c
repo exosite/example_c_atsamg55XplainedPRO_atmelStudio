@@ -26,6 +26,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <string.h>
+#include "rtc.h"
+#include "ioport.h"
 #include "asf.h"
 #include "bsp/include/nm_bsp.h"
 #include "driver/include/m2m_wifi.h"
@@ -57,6 +59,9 @@ int exolib_read_raw(Exosite_state_t *exo, const char *data, size_t len);
 int exolib_read_complete(Exosite_state_t *exo, int status);
 int exolib_timestamp_complete(Exosite_state_t *exo, uint32_t timestamp);
 
+bool exosite_write_complete = true;
+char s_temperature[256];
+
 /**
  * \brief Configure UART console.
  */
@@ -82,17 +87,15 @@ int exolib_start_complete(Exosite_state_t *exo, int status)
     }
     printf(":: Exolib ready. Getting timestamp from server.\r\n");
 
-    // Got get the timestamp from the server.  Then write that to an alias.
-    exosite_timestamp(exo);
+    // Got get the timestamp from the server.
+    // exosite_timestamp(exo);
     return 0;
 }
 
 int exolib_write_complete(Exosite_state_t *exo, int status)
 {
     printf(":: Write returned with %d\r\n", status);
-
-    // Ok, now read
-    exosite_read(exo, "change");
+    exosite_write_complete = true;
     return 0;
 }
 
@@ -117,10 +120,6 @@ int exolib_read_complete(Exosite_state_t *exo, int status)
 int exolib_timestamp_complete(Exosite_state_t *exo, uint32_t timestamp)
 {
     printf(":: Got timestamp %d.\r\n", (int)timestamp);
-    // !!! Remember, the buffer needs to exist until the write callback is called.
-    // So you cannot use memory on the stack.
-    snprintf(writeReqBuffer, sizeof(writeReqBuffer), "change=%d", (int)timestamp);
-    exosite_write(exo, writeReqBuffer);
     return 0;
 }
 
@@ -303,16 +302,37 @@ int main(void)
         }
     }
 
+	/* Initialize Buttons and LEDs */
+	#define LED1    EXT3_PIN_7 // IOPORT_CREATE_PIN(PORTA, 7)
+	#define LED2    EXT3_PIN_8 // IOPORT_CREATE_PIN(PORTA, 8)
+	#define LED3    EXT3_PIN_6 // IOPORT_CREATE_PIN(PORTA, 6)
+	#define BUTTON1 EXT3_PIN_9 // IOPORT_CREATE_PIN(PORTA, 9)
+	#define BUTTON2 EXT3_PIN_3 // IOPORT_CREATE_PIN(PORTA, 3)
+	#define BUTTON3 EXT3_PIN_4 // IOPORT_CREATE_PIN(PORTA, 4)
+
+	ioport_init();
+
+	ioport_set_pin_dir(LED1, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED2, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(LED3, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(BUTTON1, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON1, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(BUTTON2, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON2, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(BUTTON3, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON3, IOPORT_MODE_PULLUP);
+
     /* Initialize CryptoAuthLib. */
 #ifdef __ATECC508__
 	eccInit(ECC508_TARGET_OP_TLS);
 
 #ifdef __TLS_ECC_ONLY_CIPHERS__
-	sslSetActiveCipherSuites(SSL_ECC_CIPHERS_AES_128);
+// sslSetActiveCipherSuites(SSL_ECC_CIPHERS_AES_128);
+sslSetActiveCipherSuites(SSL_ECC_ALL_CIPHERS | SSL_NON_ECC_CIPHERS_AES_128);
 #endif /* __TLS_ECC_ONLY_CIPHERS__ */
 
 #ifdef __TLS_ECDHE_ECDSA_ONLY_CIPHERS__
-	sslSetActiveCipherSuites( SSL_CIPHER_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 | SSL_CIPHER_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256);
+sslSetActiveCipherSuites( SSL_ECC_ALL_CIPHERS | SSL_NON_ECC_CIPHERS_AES_128 );
 #endif /* __TLS_ECDHE_ECDSA_ONLY_CIPHERS__ */
 
 #endif /* __ATECC508__ */
@@ -344,8 +364,86 @@ int main(void)
     m2m_wifi_connect((char*)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
             MAIN_WLAN_AUTH, (char*)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
-    while (1) {
-        m2m_wifi_handle_events(NULL);
+	void rtc_setup(void)
+	{
+		pmc_switch_sclk_to_32kxtal(PMC_OSC_XTAL);
+
+		while (!pmc_osc_is_ready_32kxtal());
+
+		rtc_set_hour_mode(RTC, 0);
+	}
+	rtc_setup();
+
+	uint32_t hour, minute, second;
+	rtc_get_time(RTC, &hour, &minute, &second);
+
+	int temperature = 70;
+	uint32_t start_time;
+	uint32_t button1_time;
+	uint32_t button2_time;
+
+	rtc_get_time(RTC, &hour, &minute, &start_time);
+	rtc_get_time(RTC, &hour, &minute, &button1_time);
+	rtc_get_time(RTC, &hour, &minute, &button2_time);
+
+	while (1) {
+
+		m2m_wifi_handle_events(NULL);
+
+		// check for increases
+		if (! ioport_get_pin_level(BUTTON1))
+		{
+			rtc_get_time(RTC, &hour, &minute, &second);
+			if (second - button1_time >= 1)
+			{
+				printf("main: BUTTON1 - Incrementing temperature in Murano to: ");
+				rtc_get_time(RTC, &hour, &minute, &button1_time);
+				ioport_set_pin_level(LED1, true);
+				temperature++;
+				printf("%d\r\n", temperature);
+				sprintf(s_temperature, "temperature=%d", temperature);
+				if (exosite_write_complete)
+				{
+					exosite_write_complete = false;
+					exosite_write(&exoLib, s_temperature);
+				}
+				else
+				{
+					printf("Waiting on exosite_write to complete.\r\n");
+				}
+			}
+		else
+		{
+			ioport_set_pin_level(LED1, false);
+		}
+
+		// check for decreases
+		if (! ioport_get_pin_level(BUTTON2))
+		{
+			rtc_get_time(RTC, &hour, &minute, &second);
+			if (second - button2_time >= 1)
+			{
+				printf("main: BUTTON2 - Decrementing temperature in Murano to: ");
+				rtc_get_time(RTC, &hour, &minute, &button2_time);
+				ioport_set_pin_level(LED2, true);
+				temperature--;
+				printf("%d.\r\n", temperature);
+				sprintf(s_temperature, "temperature=%d", temperature);
+				if (exosite_write_complete)
+				{
+					exosite_write_complete = false;
+					exosite_write(&exoLib, s_temperature);
+				}
+				else
+				{
+					printf("Waiting on exosite_write to complete.\r\n");
+				}
+			}
+		}
+		else
+		{
+			ioport_set_pin_level(LED2, false);
+		}
     }
 
     return 0;
