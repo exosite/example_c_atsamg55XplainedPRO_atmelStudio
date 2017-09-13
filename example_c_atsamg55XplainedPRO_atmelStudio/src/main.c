@@ -412,6 +412,7 @@ sslSetActiveCipherSuites( SSL_ECC_ALL_CIPHERS | SSL_NON_ECC_CIPHERS_AES_128 );
 					printf("Waiting on exosite_write to complete.\r\n");
 				}
 			}
+        }
 		else
 		{
 			ioport_set_pin_level(LED1, false);
