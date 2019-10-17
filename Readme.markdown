@@ -1,6 +1,8 @@
 This is an example on how connecting the [AT88CKECC-AWS-XSTK](http://www.atmel.com/tools/at88ckecc-aws-xstk.aspx)
-dev kit from [Atmel](http://www.atmel.com),
-utilizing the [Exosite C library](https://github.com/exosite/libexosite_c_http-device) to Exosite's Murano.
+dev kit from [Atmel](http://www.atmel.com), utilizing the [Exosite C library](https://github.com/exosite/libexosite_c_http-device) to Exosite's Murano.
+
+Find the full Murano integration guide on [The Ecc508-Samg55-Winc1500 SDK documentation page](https://docs.exosite.com/connectivity/sdk/ecc508-samg55-winc1500).
+
 
 1. Install Atmel Studio
 2. Install git
